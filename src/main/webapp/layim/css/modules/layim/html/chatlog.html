@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>聊天记录</title>
+<script type="text/javascript" src="js/hgUtils.js"></script>
+<script type="text/javascript" src="/js/jquery-1.11.1.js"></script>
+<link rel="stylesheet" href="layim/css/layui.css">
+<style>
+	body .layim-chat-main{height: auto;}
+</style>
+</head>
+<body>
+<div class="layim-chat-main">
+  <ul id="LAY_view"></ul>
+</div>
+<div id="LAY_page" style="margin: 0 10px;"></div>
+
+<textarea title="消息模版" id="LAY_tpl" style="display:none;">
+{{# layui.each(d.data, function(index, item){
+  if(item.id == parent.layui.layim.cache().mine.id){ }}
+    <li class="layim-chat-mine"><div class="layim-chat-user"><img src="{{ item.avatar }}"><cite><i>{{ layui.data.date(item.timestamp) }}</i>{{ item.username }}</cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
+  {{# } else { }}
+    <li><div class="layim-chat-user"><img src="{{ item.avatar }}"><cite>{{ item.username }}<i>{{ layui.data.date(item.timestamp) }}</i></cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
+  {{# }
+}); }}
+</textarea>
+
+<!-- 
+上述模版采用了 laytpl 语法，不了解的同学可以去看下文档：http://www.layui.com/doc/modules/laytpl.html
+-->
+
+<script src="/layim/layui.js" charset="utf-8"></script>
+<script>
+var toid = getQueryString('id');
+var type = getQueryString('type') =='friend'?1:2;
+//console.log("toid:"+toid);
+//console.log("type:"+type);
+var pageNo = 1;
+var pageSize = 20;
+var res = {
+		 
+}
+var $;
+layui.use(['layim', 'laypage'], function(){
+   var layim = layui.layim
+  ,layer = layui.layer
+  ,laytpl = layui.laytpl
+  ,$ = layui.jquery
+  ,laypage = layui.laypage;
+  
+  //聊天记录的分页此处不做演示，你可以采用laypage，不了解的同学见文档：http://www.layui.com/doc/modules/laypage.html
+  
+  //开始请求聊天记录
+  var param =  location.search //获得URL参数。该窗口url会携带会话id和type，他们是你请求聊天记录的重要凭据
+  //console.log(param)
+  //实际使用时，下述的res一般是通过Ajax获得，而此处仅仅只是演示数据格式
+  /* ,res = {
+    code: 0
+    ,msg: ''
+    ,data: [{
+       username: '纸飞机'
+      ,id: 1
+      ,avatar: 'http://tva3.sinaimg.cn/crop.0.0.512.512.180/8693225ajw8f2rt20ptykj20e80e8weu.jpg'
+      ,timestamp: 1480897882000
+      ,content: 'face[抱抱] face[心] 你好啊小美女'
+    }, {
+      username: 'Z_子晴'
+      ,id: 108101
+      ,avatar: 'http://tva3.sinaimg.cn/crop.0.0.512.512.180/8693225ajw8f2rt20ptykj20e80e8weu.jpg'
+      ,timestamp: 1480897892000
+      ,content: '你没发错吧？face[微笑]'
+    }]
+  }  */
+  
+   
+  $.ajax({
+	  url:'${base}/user/getOldMsgs',
+	  data:{pageNo:pageNo,pageSize:pageSize,toid:toid,type:type},
+	  async:false,
+	  success:function(data){
+		  //console.log("查询完成..");
+		  res = data;
+		  //console.log(res);
+		  updateUi();
+	  }
+   });
+  
+});
+
+loadMore();
+function updateUi(){
+   $.each(res.data,function(idx,item){
+	   //console.log(item);
+	   //alert(format(item.timestamp));
+	   //alert(parent.layui.layim.cache().mine.id);
+	   if(item.from == parent.layui.layim.cache().mine.id){	//我发的
+		   $("#LAY_view").append('<li class="layim-chat-mine"><div class="layim-chat-user"><img src="'+item.avatar+'"><cite><i>'+layui.data.date(parseInt(item.timestamp))+'</i>'+item.username+'</cite></div><div class="layim-chat-text">'+layui.layim.content(item.content)+'</div></li>');
+	   }else{
+		   $("#LAY_view").append('<li><div class="layim-chat-user"><img src="'+item.avatar +'"><cite>'+item.username+'<i>'+layui.data.date(parseInt(item.timestamp))+'</i></cite></div><div class="layim-chat-text">'+layui.layim.content(item.content)+'</div></li>');
+	   }
+   });
+}
+
+function loadMore(){
+    $(".LAY_view").append('<div class=loading style=display:none;text-align:center;height:30px;line-height:30px;background:#fff;>加载中...</div>');//插入加载中的提示框
+    var stop = true; //默认停止加载
+    // 页数
+    var page = 1;
+    // 每页展示5个
+    var size = 10;
+    var bottomH=50;//距离底部多少像素开始加载
+    $(window).scroll(function() {
+        //alert(1);
+        totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop()+bottomH);
+        if ($(document).height() <= totalheight) {
+           // alert(1);
+            if (stop == true) {
+                stop = false;
+                $(".loading").show();//显示加载中提示
+                $.ajax({
+              	  url:'${base}/user/getOldMsgs',
+              	  data:{pageNo:pageNo,pageSize:pageSize,toid:toid,type:type},
+              	  async:false,
+              	  success:function(data){
+              		  //console.log("查询完成..");
+              		  if(data.data.length >0){
+              			 res = data;
+              			 updateUi();
+              			 $('.loading').hide();
+              			 pageNo++;
+              		  }else{
+              			 $(".loading").text("暂无数据")
+              		  }
+              		  stop = true;
+              		  //console.log(res);
+              	  },
+              	  error: function(xhr, type) {
+//                    $(".loading").hide();
+                    alert("ajax error!");
+                  }
+              });
+                
+                
+//                $.ajax({
+//                    url: 'http://ons.me/tools/dropload/json.php?page=' + page + '&size=' + size,
+//                    type: 'GET',
+//                    contentType: "application/json; charset=utf-8",
+//                    dataType: "json",
+//                    success: function(data) {
+//                        var dateLength = data.length; //数据长度
+//                        if (dateLength > 0) {
+//                            $(".loading").before('<div class=list><p class=listP1> <strong>132***313</strong> <img src=../img/xing3.png alt> <img src=../img/xing3.png alt> <img src=../img/xing3.png alt> <img src=../img/xing3.png alt><img src=../img/xing4.png alt><span>2017-12-26 13:20</span></p><p class=listP2>好吃，一直吃他家的</p></div>')
+//                            $('.loading').hide();
+//                            page++;
+//                            stop = true;
+//                        } else {
+//                            $(".loading").text("暂无数据")
+//                        }
+//                    },
+//                    error: function(xhr, type) {
+//                        $(".loading").hide();
+//                        alert("ajax error!");
+//                    }
+//                });
+            }
+
+        }
+    });
+}
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+	<link rel="stylesheet" href="layim/css/layui.css">
+    <script src="layim/layui.js" charset="utf-8"></script>
+</head>
+<style>
+	*{
+		margin: 0;
+		padding: 0;
+	}
+
+	#content li{
+		/*margin: 10px;*/
+		/*margin-left:35px;*/
+		margin-bottom:20px;
+		display: inline;
+		float: left;
+		width: 30%;
+		height: 100px;
+	}
+
+	#content li:nth-child(3n+1){
+		margin-left: 3%;
+	}
+</style>
+<div class="layim-add-box" style="display: none;" id="box">
+	<div class="layim-add-img">
+		<img class="layui-circle" src="" id="uimg">
+		<p id="uname">xxx</p>
+	</div>
+	<div class="layim-add-remark">
+		<p>选择分组</p>
+		<select class="layui-select" id="LAY_layimGroup" onchange="tabgroup(this)">
+
+		</select>
+	</div>
+</div>
+
+<body>
+
+<fieldset class="layui-elem-field">
+  <legend>找朋友(支持群)</legend>
+	  <div class="layui-field-box layui-form" id="box2">
+	  	<input type="text" name="name" required lay-verify="required" placeholder="请输入内容" class="layui-input" style="width: 50%; display: inline;">&nbsp;&nbsp;&nbsp;&nbsp;<button class="layui-btn" style="display: inline;" id="btn_seach"  >搜索</button>
+		  <span style="color: red;">推荐搜索:</span>
+  	  </div>
+</fieldset>
+<div>
+	<ul id="content" style="width: 990px;">
+  	  	<!--<li style="width: 190px; height: 100px;">-->
+  	  		<!--<img style="border-radius: 20px; display: inline;width:100px; height:100px; float: left;" src='/mychat/imgs/1.jpg' >-->
+  	  		<!--<div style="float: left;">-->
+	  	  		<!--<span style="font-size: 24px; color: buttonshadow; margin: 4px; margin-left: 7px;">小明</span>-->
+	  	  		<!--<span style="color:#3FDD86;">在线</span>-->
+	  	  		<!--&lt;!&ndash;<span style="color:#DD691D;">离线</span>&ndash;&gt;-->
+	  	  		<!--<div style="display: block; margin-top: 10px; margin-left: 5px;"><button class="layui-btn layui-btn-radius layui-btn-normal">加好友</button></div>-->
+  	  		<!--</div>-->
+  	  	<!--</li>-->
+  	  </ul>
+</div>
+
+
+<script type="text/javascript">
+
+	var layim;
+	var layer;
+	var laytpl;
+	var $;
+	var laypage;
+	layui.use(['layim', 'laypage','form'], function(){
+	   layim = layui.layim
+	  ,layer = layui.layer
+	  ,laytpl = layui.laytpl
+	  ,$ = layui.jquery
+	  ,laypage = layui.laypage;
+
+
+        $.get('${base}/user/random',function(data){
+            //console.log(data);
+            for(var i=0; i<data.length; i++){
+                //console.log(data[i]);
+                $('#box2').append('<span>'+data[i]+'</span>&nbsp;&nbsp;&nbsp;');
+			}
+        });
+
+
+
+	  //查找好友btn
+	   $('#btn_seach').click(function(){
+		    var name = $("[name=name]").val();
+			if($.trim(name) == ''){
+				layer.alert("请输入要查找的用户名!");
+				return;
+			}
+		   
+			$.ajax({
+				url:'${base}/user/seach',
+				dataType:'json',
+				data:{name:name},
+				async:false,
+				success:function(data){
+					$('#content').text("");
+					//console.log(data);
+					var users = JSON.parse(data.users);
+					var groups = JSON.parse(data.groups);
+					var flag = 0;
+					if(undefined!=users && users.length>0){
+						$(users).each(function(){
+							var status = "";
+							if(this.status == 'online'){
+								status = "<span style=\"color:#3FDD86;\">在线</span>";
+							}else{
+								status = "<span style=\"color:#DD691D;\">离线</span>";
+							}
+							var li = '<li id='+this.id+'> <img style="border-radius: 20px; display: inline;width:100px; height:100px; float: left;" src=\''+this.avatar+'\' > <div style="float: left;"> <span style="font-size: 24px; color: buttonshadow; margin: 6px; margin-left: 17px;">'+this.username+'</span>'+status+' <div style="display: block; margin-top: 10px; margin-left: 5px;"><button class="layui-btn layui-btn-radius layui-btn-normal" data-type="agree" onclick="addFriend(this)">加好友</button></div> </div> </li>';
+							$('#content').append(li);
+						});
+					}else{
+						flag ++;
+					}
+
+					if(undefined != groups && groups.length > 0){
+                        $(groups).each(function(){
+                            var status = "";
+							status = "<span style=\"color:#3FDD86;\">群组</span>";
+                            var li = '<li id='+this.id+'> <img style="border-radius: 20px; display: inline;width:100px; height:100px; float: left;" src=\''+this.avatar+'\' > <div style="float: left;"> <span style="font-size: 24px; color: buttonshadow; margin: 6px; margin-left: 17px;">'+this.groupname+'</span>'+status+' <div style="display: block; margin-top: 10px; margin-left: 5px;"><button class="layui-btn layui-btn-radius layui-btn-normal" data-type="agree" group_id='+this.id+' avatar='+this.avatar+' onclick="innerGroup(this)"  group_name='+this.groupname+'>加群</button></div> </div> </li>';
+                            $('#content').append(li);
+                        });
+					}else {
+					    flag++
+					}
+
+					if(flag == 2){
+                        layer.alert("没查询到相关用户!");
+                    }
+
+				}
+
+			});
+	   });
+	   
+	});
+	
+	  var fromgroup = 0;
+		
+	  //加好友
+	  function addFriend(obj){
+		 var _obj = obj;
+		 ////console.log($(_obj).parent().prev().prev());
+		 var username = $(_obj).parent().prev().prev().text();
+		 var avatar =  $(_obj).parent().parent().prev().attr('src');
+		 var groups = parent.layui.layim.cache().friend;
+          var uid = $($(_obj).parent().parent().parent()).attr('id');
+          //console.log("uid:"+uid);
+		 var me = '${me}';
+		 if(me == uid){
+			layer.msg("不能添加自己为好友哦!");
+			return;
+		 }
+		 //console.log("username:"+username);
+		 //console.log("avatar:"+avatar);
+		 //console.log("groups:"+groups);
+		 $('#uimg').attr('src',avatar);
+		 $('#uname').text(username);
+		 //console.log( $('#ugroup'));
+	     $(groups).each(function(index,item){
+	    	 if(index == 0){
+	    		 fromgroup = item.id;
+	    	 }
+	    	 //console.log("id:"+item.id);
+	    	 //console.log("groupname:"+item.groupname);
+	    	 var op = "<option value='"+item.id+"'>"+item.groupname+"</option>";
+	    	 //console.log(op);
+	    	 $('#LAY_layimGroup').append(op);
+		 });
+
+          layim.add({
+              type: 'friend'
+              ,username: username
+              ,avatar: avatar
+              ,submit: function(group, remark, index){
+//                  layer.msg('好友申请已发送，请等待对方确认', {
+//                      icon: 1
+//                      ,shade: 0.5
+//                  }, function(){
+//                      layer.close(index);
+//                  });
+
+                  var uid = $($(_obj).parent().parent().parent()).attr('id');
+		 		  //console.log("uid:"+uid);
+//		 		  //console.log("fromgroup:"+fromgroup);
+		 		  //console.log("remark:"+remark);
+                  //console.log("group:"+group);
+
+                  $.ajax({
+		 			  url:'${base}/user/applyFriend',
+		 			  type:'get',
+		 			  data:{'uid':uid,'from_group':group,"remark":remark},
+		 			  success:function(data){
+		 				  //console.log(data);
+		 				  if(data.ok == 1){
+                              layer.msg('好友申请已发送，请等待对方确认', {
+                                  icon: 1
+                                  ,shade: 0.5
+                              }, function(){
+                                  layer.close(index);
+                              });
+
+		 					 $('#LAY_layimGroup').text("");
+		 				  }else{
+		 					 layer.msg(data.msg);
+		 					 $('#LAY_layimGroup').text("");
+		 				  }
+		 			  }
+		 		  });
+              }
+          });
+
+//		 layer.open({
+//			   title: '添加好友'
+//			  ,content: $('#box').html()
+//			  ,area: ['450px', '270px']
+//		 	  ,btn: ['确定', '取消']
+//		 	  ,yes: function(index, layero){
+//		 		  var uid = $($(_obj).parent().parent().parent()).attr('id');
+//		 		  //console.log("uid:"+uid);
+//		 		  //console.log("groupid:"+fromgroup);
+//
+//		 		   $.ajax({
+//		 			  url:'/mychat/user/applyFriend',
+//		 			  type:'get',
+//		 			  data:{'uid':uid,'from_group':fromgroup},
+//		 			  success:function(data){
+//		 				  //console.log(data);
+//		 				  if(data.ok == 1){
+//		 					  layer.msg("发送成功!");
+//		 					 $('#LAY_layimGroup').text("");
+//		 				  }else{
+//		 					 layer.msg("发送失败!");
+//		 					 $('#LAY_layimGroup').text("");
+//		 				  }
+//		 			  }
+//
+//		 		  });
+//
+//		 	    //alert("按钮1");
+//		 	  }
+//		 	  ,btn2: function(index, layero){
+//		 	   $('#LAY_layimGroup').text("");
+//		 	    //return false 开启该代码可禁止点击该按钮关闭
+//		 	  },cancel:function(){
+//		 		 $('#LAY_layimGroup').text("");
+//		 	  }
+//		 });
+	  }
+
+    //加群
+    function innerGroup(obj) {
+        var _obj = obj;
+        var group_name = $(_obj).attr('group_name');
+        var avatar = $(_obj).attr('avatar');
+        var group_id = $(_obj).attr('group_id');
+
+        //var groups = parent.layui.layim.cache().friend;
+
+        //console.log(obj);
+        //console.log("avatar:" + avatar);
+        //console.log("group_id:");
+        //console.log(group_id);
+        $('#uimg').attr('src', avatar);
+        $('#uname').text(group_name);
+        //console.log($('#ugroup'));
+        var me = '${me}';
+//        $(groups).each(function (index, item) {
+//            if (index == 0) {
+//                fromgroup = item.id;
+//            }
+//            //console.log("id:" + item.id);
+//            //console.log("groupname:" + item.groupname);
+//            var op = "<option value='" + item.id + "'>" + item.groupname + "</option>";
+//            //console.log(op);
+//            $('#LAY_layimGroup').append(op);
+//        });
+        layim.add({
+            type: 'group'
+            , groupname: group_name
+            , avatar: avatar
+            , submit: function (group, remark, index) {
+//                //console.log("group:"+group);  	//group:undefined
+//                //console.log("remark:"+remark);	//remark:111
+//                //console.log("index:"+index);	//index:1
+				//console.log("me:"+me);
+                //console.log("groupId:"+group_id);
+                //console.log("remark:"+remark);
+
+                $.get('${base}/user/innerGroup',{'userId': me, 'groupId': group_id, "remark": remark},function (data) {
+                    //console.log(data);
+                    if (data.code == 1) {
+						layer.msg('加群申请已发送!', {
+							icon: 1
+							, shade: 0.5
+						}, function () {
+							layer.close(index);
+						});
+
+						$('#LAY_layimGroup').text("");
+					} else {
+						layer.msg(data.msg);
+						$('#LAY_layimGroup').text("");
+					}
+                });
+
+            }
+        });
+    }
+
+
+	  function tabgroup(obj){
+		  fromgroup = $(obj).val();
+	  }
+</script>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>LuliChat</title>
+    <link rel="stylesheet" href="layim/css/layui.css">
+    <link rel="stylesheet" href="${base}/css/menu.css">
+    <script src="layim/layui.js" charset="utf-8"></script>
+    <script src="js/common.js"></script>
+    <script src="js/swfobject.js"></script>
+    <script src="js/web_socket.js"></script>
+    <script src="js/hgUtils.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+    var socket;
+    var $ = layui.jquery;
+    var base = '${base}';
+    var menu;
+
+    layui.extend({
+        menu:'js/menu'
+    });
+
+    layui.use('layim', function (layim) {
+        $ = layui.jquery;
+        layim.config({
+            init: {
+                url: base + '/user/getInitData',
+                type: 'get'
+            },
+            chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html',
+            msgbox: layui.cache.dir + 'css/modules/layim/html/msgbox.html',
+            brief: false,
+            find: base + '/find.html', //发现页面地址，若不开启，剔除该项即可,
+            title: '${username}',
+            //可同时配置多个
+            tool: [],
+            uploadImage: {
+                url:'${base}/upload/image'
+            },
+            //上传文件接口（返回的数据格式见下文）
+            uploadFile: {
+                url: '${base}/upload/files' //接口地址
+                , type: 'post' //默认post
+            }
+            //查看群员接口
+            , members: {
+                url: base + '/user/getMembers'
+                , data: {}
+            },
+            notice: true,
+            isAudio: true, //开启聊天工具栏音频
+            isVideo: true, //开启聊天工具栏视频
+        });
+
+        layim.on('tool(img)', function (insert, send, obj) {
+//            console.log(insert);
+//            console.log(send);
+//            console.log(obj);
+        });
+
+//	    console.log(url+':'+port+'?id=${me}&cookie='+getCookie("JSESSIONID"));
+//      setCookie("AAA","123");
+//      console.log("Hm_lvt_b393d153aeb26b46e9431fabaf0f6190:"+getCookie("Hm_lvt_b393d153aeb26b46e9431fabaf0f6190"));
+        try {
+            socket = new WebSocket("ws://" + url + ':' + port + '?id=${me}&sessionId=${sessionId}');
+            socket.onerror = function (e) {
+                console.log(e);
+                alert("接入Socket失败,请先登录!");
+                location.href = '${base}/login.html';
+            }
+        } catch (err) {
+            console.log(err);
+            alert("接入Socket失败,请先登录!");
+            location.href = '${base}/login.html';
+        }
+
+        //接入websocket
+        //连接成功时触发
+        socket.onopen = function () {
+            console.log("${username}登陆成功...");
+            //取查未读消息
+            socket.send(JSON.stringify({'action': '8', 'body': '{me:${me},name:"${username}"}'}));
+//	 		console.log(JSON.stringify({'action':'oldMsg'}));
+            layer.msg('接入成功...', {icon: 1, offset: 'lb'});
+        }
+
+        socket.onclose = function () {
+//	        alert("真的要结束了...");
+//	    	console.log("${username} 下线成功...");
+//	    	layer.msg('您已下线...',{icon: 5,offset: 'lb'});
+        }
+
+        //监听接受到消息事件
+        socket.onmessage = function (res) {
+            console.log("接收到消息...");
+            console.log(res);
+            var data = res.data;
+            data = JSON.parse(data);
+            console.log("data:");
+            console.log(data);
+            var body = JSON.parse(data.body);
+            if (data.action != 'undefined') {
+                switch (data.action) {
+                    case "offline":
+                        layer.msg(data.msg, {icon: 5, offset: 'lb'});
+                        break;
+                    case "online":
+                        layer.msg(data.msg, {icon: 1, offset: 'lb'});
+                        break;
+                    case parseInt(TYPE.P2PMSG):
+                        //console.log("P2pMsg...");
+                        layim.getMessage(JSON.parse(data.body));
+                        break;
+                    case parseInt(TYPE.GROUP_MSG_REQ):
+                        //console.log("GroupMsg...");
+                        layim.getMessage(JSON.parse(data.body));
+                        break;
+                    case parseInt(TYPE.OLDMSG):
+                        //console.log("oldMsg");
+                        layim.getMessage(JSON.parse(data.body));
+                        break;
+                    case parseInt(TYPE.SUCCESS_MESSAGE_RESP):
+                        //console.log("success 消息");
+                        layer.msg(body.msg, {icon: 1, offset: 'lb'});
+                        break;
+                    case parseInt(TYPE.FAIL_MESSAGE_RESP):
+                        //console.log("fail 消息");
+                        layer.msg(body.msg, {icon: 5, offset: 'lb'});
+                        break;
+                    case parseInt(TYPE.REQFRIEND):
+                        layim.msgbox("新");
+                        break;
+                    case parseInt(TYPE.REQFRIENDSUCCESS):
+                        //console.log("对方同意加好友...");
+                        layim.msgbox("新");
+                        var userJson = {
+                            type: 'friend'
+                            , avatar: body.user.avatar //好友头像
+                            , username: body.user.username //好友昵称
+                            , groupid: body.group //所在的分组id
+                            , id: body.user.id //好友ID
+                            , sign: body.user.sign //好友签名
+                        };
+                        //console.log("userJson:");
+                        //console.log(userJson);
+                        layim.addList(userJson);
+                        break;
+                    case parseInt(TYPE.JOIN_GROUP_REQ):
+                        //console.log("加群成功...");
+                        layim.addList(body);
+                        layim.msgbox("新");
+                        break;
+                    default:
+                        layer.msg("非法消息规格!");
+                        break;
+                }
+            }
+            //res = JSON.parse(res);
+//            layim.getMessage(data); //res.data即你发送消息传递的数据（阅读：监听发送的消息）
+        };
+
+        //监听发送消息事件
+        layim.on('sendMessage', function (res) {
+            //console.log("发送消息...");
+            if (res.to.type == 'friend') {
+                res.type = 'friend';
+                res.action = TYPE.P2PMSG;
+            } else if (res.to.type == 'group') {
+                res.type = 'group';
+                res.action = TYPE.GROUP_MSG_REQ;
+            }
+            //console.log(res);
+            res = JSON.stringify(res);
+            socket.send(res);
+            // layim.msgbox(5);
+        });
+
+        //监听页面就绪回调
+        layim.on('ready', function (options) {
+            //console.log(options);
+            layim.setFriendStatus(2, 'offline');
+            //查询是否有未读消息
+            $.ajax({
+                url: '${base}/user/unreadMsgCount',
+                success: function (data) {
+//	    			  //console.log(data);
+                    //获取不到当下消息数量...
+//                      //console.log("unReadReq:");
+//                      layim.msgbox("新");
+//                      //console.log($('.layui-anim .layui-anim-loop .layer-anim-05')[0]);
+                    if (data.count > 0) {
+                        layim.msgbox(data.count); //数字即为你通过websocket或者Ajax实时获取到的最新消息数量
+                    }
+                }
+            });
+
+//            i = '<li class="ui-context-menu-item"><a href="javascript:void(0);" ><span>删除</span></a></li>';
+//            var  html = '<ul id="contextmenu">' + i + '</ul>';
+//
+//            $(document).bind("contextmenu", function(){
+//                return false;
+//            })
+
+            //右键菜单
+//            $(".layim-list-friend >li > ul > li").menu({
+//                target: function (ele) { // 当前元素
+//                    ele.css('background', 'rgba(0,0,0,.05)').siblings().css('background', '#ffffff');
+//                    //console.log(ele);
+//                },
+//                menu: [{
+//                    text: "新增",
+//                    callback: function (target,ele) {
+//                        //console.log(target);
+//                        layer.msg(ele.find('span').text());
+//                    }
+//                }, {
+//                    text: "复制",
+//                    callback: function (target,ele) {
+//                        //console.log(target);
+//                        layer.msg(ele.find('span').text());
+//                    }
+//                }, {
+//                    text: "粘贴",
+//                    callback: function (target,ele) {
+//                        //console.log(target);
+//                        layer.msg(ele.find('span').text());
+//                    }
+//                }, {
+//                    text: "删除",
+//                    callback: function (target,ele) {
+//                        //console.log(target);
+//                        layer.msg(ele.find('span').text());
+//                    }
+//                }
+//                ]
+//            });
+
+            //监听切换在线状态回调
+            layim.on('online', function (status) {
+                if (status == 'online') {
+                    $.get('${base}/user/online');
+                } else {
+                    $.get('${base}/user/hide');
+                }
+            });
+
+            //监听修改签名回调
+            layim.on('sign', function (value) {
+                $.get('${base}/user/updateSign', {'sign': value});
+            });
+
+            //每次窗口打开或切换，即更新对方的状态
+            layim.on('chatChange', function (res) {
+                var type = res.data.type;
+                //console.log(res);
+                if (type === 'friend') {
+                    var id = res.data.id;
+                    $.get('${base}/user/getUser', {'id': id}, function (data) {
+                        //console.log(data);
+                        if (data.status == 'online') {
+                            layim.setChatStatus('<span style="color:#FF5722;">在线</span>'); //模拟标注好友在线状态
+                        } else {
+                            layim.setChatStatus('<span style="color:#8D9794;">离线</span>'); //模拟标注好友在线状态
+                        }
+                    });
+                } else if (type === 'group') {
+
+                }
+            });
+
+
+//            //初始化菜单
+//            menu.init({
+//                menu: [
+//                    {
+//                        id:1,
+//                        ele: 'li[data-type="friend"]',
+//                        items: [
+//                            { text: '即时聊天', name: 'chat', icon: '', group: 'g1' },
+//                            { text: '历史记录', name: 'history', icon: '', group: 'g1' },
+//                            { text: '删除好友', name: 'delete', icon: 'ဇ', group: 'g3' },
+//                            {
+//                                text: '移动至', group: 'g2', child: [
+//                                { text: '我的好友', name: 'myfriend', icon: '' },
+//                                { text: '大学同学', name: 'collage', icon: '' },
+//                                { text: '公司同事', name: 'worker', icon: '' }
+//                            ]
+//                            },
+//                        ]
+//                    },
+//                    {
+//                        id:2,
+//                        ele: 'li[data-type="group"]',
+//                        items: [
+//                            { text: '即时聊天', name: 'chat',  group: 'g1' },
+//                            { text: '历史记录', name: 'history',  group: 'g1' },
+//                            { text: '屏蔽消息', name: 'delete', group: 'g1' },
+//                            { text: '解散群', name: 'delete',  group: 'g1' },
+//                            { text: '转移群', name: 'delete',group: 'g1' },
+//                        ]
+//                    },
+//                    {
+//                        id:3,
+//                        ele: 'h5',
+//                        items: [
+//                            { text: '删除分组', name: 'chat',  group: 'g1' },
+//                            { text: '刷新好友', name: 'history',  group: 'g1' },
+//                            { text: '修改名称', name: 'delete',  group: 'g1' }
+//                        ]
+//                    }
+//                ]
+//            });
+         });
+
+    //刷新页面,关闭页面等操作时关闭socket连接通道
+    window.onbeforeunload = function () {
+        socket.close();
+    }});
+
+</script>
+
+</body>
+</html>
