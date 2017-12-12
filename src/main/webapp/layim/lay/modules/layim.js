@@ -582,7 +582,7 @@
                 content: n(m).render({skin: j.base.skin})
             })
         }, about: function () {
-            t.alert("版本: 2.0 " + '<br>技术支持：<a href="http://nutzam.com/core/nutz_preface.html" target="blank">Nutz框架</a> <a href="https://www.oschina.net/p/t-io" target="blank">t-io</a> <a href="http://layim.layui.com" target="blank">Layim</a><br/>特别推荐:<a href="https://nutz.io" target="blank">NutzBoot</a><br/> 特别感谢: <a href="http://wendal.net/about/" target="blank">Wendal大叔</a>  <br/><a href="https://github.com/TopCoderMyDream" target="blank">By: 蛋蛋的忧伤</a> ', {
+            t.alert("版本: 2.0 " + '<br>技术支持：<a href="http://nutzam.com/core/nutz_preface.html" target="blank">Nutz框架</a> <a href="https://www.oschina.net/p/t-io" target="blank">t-io</a> <a href="http://layim.layui.com" target="blank">Layim</a><br/>特别推荐:<a href="https://nutz.io" target="blank">NutzBoot</a><br/> 特别感谢: <a href="http://wendal.net/about/" target="blank">Wendal大叔</a>  <br/><a href="https://github.com/TopCoderMyDream/LuliChat" target="blank">By: 蛋蛋的忧伤</a> <br> <span>欢迎给个star哦</span>', {
                 title: "关于陆离Chat",
                 shade: !1
             })
