@@ -20,9 +20,9 @@
 <textarea title="消息模版" id="LAY_tpl" style="display:none;">
 {{# layui.each(d.data, function(index, item){
   if(item.id == parent.layui.layim.cache().mine.id){ }}
-    <li class="layim-chat-mine"><div class="layim-chat-user"><img src="${base}/{{ item.avatar }}"><cite><i>{{ layui.data.date(item.timestamp) }}</i>{{ item.username }}</cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
+    <li class="layim-chat-mine"><div class="layim-chat-user"><img src="${base}/ {{ item.avatar }}"><cite><i>{{ layui.data.date(item.timestamp) }}</i>{{ item.username }}</cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
   {{# } else { }}
-    <li><div class="layim-chat-user"><img src="${base}/{{ item.avatar }}"><cite>{{ item.username }}<i>{{ layui.data.date(item.timestamp) }}</i></cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
+    <li><div class="layim-chat-user"><img src="${base}/ {{ item.avatar }}"><cite>{{ item.username }}<i>{{ layui.data.date(item.timestamp) }}</i></cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
   {{# }
 }); }}
 </textarea>
@@ -96,9 +96,9 @@ function updateUi(){
 	   //alert(format(item.timestamp));
 	   //alert(parent.layui.layim.cache().mine.id);
 	   if(item.from == parent.layui.layim.cache().mine.id){	//我发的
-		   $("#LAY_view").append('<li class="layim-chat-mine"><div class="layim-chat-user"><img src="'+item.avatar+'"><cite><i>'+layui.data.date(parseInt(item.timestamp))+'</i>'+item.username+'</cite></div><div class="layim-chat-text">'+layui.layim.content(item.content)+'</div></li>');
+		   $("#LAY_view").append('<li class="layim-chat-mine"><div class="layim-chat-user"><img src="${base}/'+item.avatar+'"><cite><i>'+layui.data.date(parseInt(item.timestamp))+'</i>'+item.username+'</cite></div><div class="layim-chat-text">'+layui.layim.content(item.content)+'</div></li>');
 	   }else{
-		   $("#LAY_view").append('<li><div class="layim-chat-user"><img src="'+item.avatar +'"><cite>'+item.username+'<i>'+layui.data.date(parseInt(item.timestamp))+'</i></cite></div><div class="layim-chat-text">'+layui.layim.content(item.content)+'</div></li>');
+		   $("#LAY_view").append('<li><div class="layim-chat-user"><img src="${base}/'+item.avatar +'"><cite>'+item.username+'<i>'+layui.data.date(parseInt(item.timestamp))+'</i></cite></div><div class="layim-chat-text">'+layui.layim.content(item.content)+'</div></li>');
 	   }
    });
 }
