@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>聊天记录</title>
-<script type="text/javascript" src="js/hgUtils.js"></script>
-<script type="text/javascript" src="/js/jquery-1.11.1.js"></script>
-<link rel="stylesheet" href="layim/css/layui.css">
+<script type="text/javascript" src="${base}/js/hgUtils.js"></script>
+<script type="text/javascript" src="${base}/js/jquery-1.11.1.js"></script>
+<link rel="stylesheet" href="${base}/layim/css/layui.css">
 <style>
 	body .layim-chat-main{height: auto;}
 </style>
@@ -20,9 +20,9 @@
 <textarea title="消息模版" id="LAY_tpl" style="display:none;">
 {{# layui.each(d.data, function(index, item){
   if(item.id == parent.layui.layim.cache().mine.id){ }}
-    <li class="layim-chat-mine"><div class="layim-chat-user"><img src="{{ item.avatar }}"><cite><i>{{ layui.data.date(item.timestamp) }}</i>{{ item.username }}</cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
+    <li class="layim-chat-mine"><div class="layim-chat-user"><img src="${base}/{{ item.avatar }}"><cite><i>{{ layui.data.date(item.timestamp) }}</i>{{ item.username }}</cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
   {{# } else { }}
-    <li><div class="layim-chat-user"><img src="{{ item.avatar }}"><cite>{{ item.username }}<i>{{ layui.data.date(item.timestamp) }}</i></cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
+    <li><div class="layim-chat-user"><img src="${base}/{{ item.avatar }}"><cite>{{ item.username }}<i>{{ layui.data.date(item.timestamp) }}</i></cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
   {{# }
 }); }}
 </textarea>
@@ -31,7 +31,7 @@
 上述模版采用了 laytpl 语法，不了解的同学可以去看下文档：http://www.layui.com/doc/modules/laytpl.html
 -->
 
-<script src="/layim/layui.js" charset="utf-8"></script>
+<script src="${base}/layim/layui.js" charset="utf-8"></script>
 <script>
 var toid = getQueryString('id');
 var type = getQueryString('type') =='friend'?1:2;
