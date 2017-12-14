@@ -15,3 +15,4 @@ import org.nutz.plugins.view.freemarker.FreemarkerViewMaker;
 @Fail("json")
 public class MainModule {
 }
+我想看看CI能不能编译通过
