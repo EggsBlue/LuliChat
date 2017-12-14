@@ -15,6 +15,10 @@ import javax.servlet.ServletContext;
 import org.nutz.dao.Cnd;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Files;
+import org.nutz.lang.util.NutMap;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
+import org.nutz.mvc.Mvcs;
 import org.nutz.mvc.annotation.AdaptBy;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.By;
@@ -49,21 +53,10 @@ public class UploadModule {
 	public Object image(@Param("file") TempFile file,ServletContext context){
 		System.out.println(file.getName());
 		System.out.println(file.getMeta().getFileLocalName());
-		InputStream in = null;
-		OutputStream out = null;
-		File f = file.getFile();
-//		System.out.println("目录:"+context.getContextPath());	//获取项目名
-//		System.out.println("目录2:"+context.getRealPath("/"));
-		String tomcatPath =context.getRealPath("/");//获取到tomcat位于系统的绝对磁盘路径,//此为:D:\apache-tomcat-8.0.36\webapps\mychat\
-		tomcatPath = tomcatPath.substring(0,tomcatPath.length()-1);//此为:D:\apache-tomcat-8.0.36\webapps\mychat
-		tomcatPath = tomcatPath.substring(0,tomcatPath.lastIndexOf("\\"));//此为:D:\apache-tomcat-8.0.36\webapps
-		String relpath = tomcatPath+"\\upload\\imgs\\"+file.getMeta().getFileLocalName(); // 此为: D:\\apache-tomcat-8.0.36\\webapps\\upload\\tomat.png
-		System.out.println("tomcatPath:"+tomcatPath);
-
+		String relpath = getDir()+"/upload/imgs/"+file.getMeta().getFileLocalName(); // 此为: D:\\apache-tomcat-8.0.36\\webapps\\upload\\tomat.png
 		Files.copy(file.getFile(),new File(relpath));
 
 		String url ="/upload/imgs/"+file.getMeta().getFileLocalName();	//eclipse默认的tomcat目录是在其缓存文件中,你要自己指定到tomcat所在目录
-		System.out.println(url);
 		//构建json数据
 		Map<String,Object> data = new HashMap<String,Object>();
 		data.put("code", "0");
@@ -88,21 +81,9 @@ public class UploadModule {
 	public Object files(@Param("file") TempFile file,ServletContext context){
 		System.out.println(file.getName());
 		System.out.println(file.getMeta().getFileLocalName());
-		InputStream in = null;
-		OutputStream out = null;
-		File f = file.getFile();
-//		System.out.println("目录:"+context.getContextPath());	//获取项目名
-//		System.out.println("目录2:"+context.getRealPath("/"));
-		String tomcatPath =context.getRealPath("/");//获取到tomcat位于系统的绝对磁盘路径,//此为:D:\apache-tomcat-8.0.36\webapps\mychat\
-		tomcatPath = tomcatPath.substring(0,tomcatPath.length()-1);//此为:D:\apache-tomcat-8.0.36\webapps\mychat
-		tomcatPath = tomcatPath.substring(0,tomcatPath.lastIndexOf("\\"));//此为:D:\apache-tomcat-8.0.36\webapps
-		String relpath = tomcatPath+"\\upload\\files\\"+file.getMeta().getFileLocalName(); // 此为: D:\\apache-tomcat-8.0.36\\webapps\\upload\\tomat.png
-		System.out.println("tomcatPath:"+tomcatPath);
-
+		String relpath = getDir()+"/upload/files/"+file.getMeta().getFileLocalName(); // 此为: D:\\apache-tomcat-8.0.36\\webapps\\upload\\tomat.png
 		Files.copy(file.getFile(),new File(relpath));
-
 		String url ="/upload/files/"+file.getMeta().getFileLocalName();	//eclipse默认的tomcat目录是在其缓存文件中,你要自己指定到tomcat所在目录
-		System.out.println(url);
 		//构建json数据
 		Map<String,Object> data = new HashMap<String,Object>();
 		data.put("code", "0");
@@ -116,8 +97,24 @@ public class UploadModule {
 	
 	
 	@At
-	public void test(){
-		System.out.println("lalala");
+	public Object test(){
+		NutMap nm = new NutMap();
+		String contextPath = Mvcs.getServletContext().getContextPath();
+		String realPath = Mvcs.getServletContext().getRealPath("/");
+		String parent = new File(realPath).getParent();
+		nm.setv("contextPath",contextPath);
+		nm.setv("realPath",realPath);
+		nm.setv("parent",parent);
+		return nm;
+	}
+
+	Log log = Logs.get();
+
+	public String getDir(){
+		String realPath = Mvcs.getServletContext().getRealPath("/");
+		String parent = new File(realPath).getParent();
+		log.debug("uploadDir:"+parent);
+		return parent;
 	}
 	
 }

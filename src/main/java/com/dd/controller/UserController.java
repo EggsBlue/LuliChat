@@ -7,7 +7,6 @@ import com.dd.mvc.Response;
 import com.dd.socket.Type;
 import com.dd.utils.SocketMsgUtils;
 import com.dd.utils.SocketUtils;
-import com.sun.tools.javac.main.Main;
 import org.nutz.castor.Castors;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
@@ -15,18 +14,14 @@ import org.nutz.dao.pager.Pager;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
-import org.nutz.lang.Lang;
 import org.nutz.lang.Strings;
 import org.nutz.lang.random.R;
 import org.nutz.lang.util.NutMap;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
-import org.nutz.mapl.Mapl;
 import org.nutz.mvc.annotation.*;
-import org.tio.core.Aio;
 
 import javax.servlet.http.HttpSession;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -86,10 +81,7 @@ public class UserController  {
             return re;
         }
 
-
-
         String avatar = getAvatar();
-
         user.setAvatar("imgs/"+avatar+".jpg");
         User u = userDao.save(user);
         if(u==null){
@@ -419,10 +411,12 @@ public class UserController  {
             if (Strings.isBlank(user.getPwd()))
                 return "密码不能为空";
         }
+//        dao.update(User.class,org.nutz.dao.Chain.make("name","admin").add("age",15),Cnd.where("id","=",2));
         String passwd = user.getPwd().trim();
         if (6 > passwd.length() || passwd.length() > 12) {
-            return "密码长度错误";
+            return "密码长度必须大于6位小于12位!";
         }
+
         user.setPwd(passwd);
         if (create) {
             int count = dao.count(User.class, Cnd.where("username", "=", user.getUsername()));
