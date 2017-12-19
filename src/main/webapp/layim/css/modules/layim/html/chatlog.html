@@ -26,8 +26,7 @@
   {{# }
 }); }}
 </textarea>
-
-<!-- 
+<!--
 上述模版采用了 laytpl 语法，不了解的同学可以去看下文档：http://www.layui.com/doc/modules/laytpl.html
 -->
 
@@ -82,6 +81,7 @@ layui.use(['layim', 'laypage'], function(){
 	  success:function(data){
 		  //console.log("查询完成..");
 		  res = data;
+          pageNo++;
 		  //console.log(res);
 		  updateUi();
 	  }
@@ -141,7 +141,6 @@ function loadMore(){
                     alert("ajax error!");
                   }
               });
-                
                 
 //                $.ajax({
 //                    url: 'http://ons.me/tools/dropload/json.php?page=' + page + '&size=' + size,

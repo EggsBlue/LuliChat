@@ -1,5 +1,6 @@
 package com.dd.socket;
 
+import com.dd.listener.ShiroSessionListener;
 import com.dd.utils.SocketMsgUtils;
 import com.dd.context.SessionContext;
 import com.dd.dao.UserDao;
@@ -7,6 +8,8 @@ import com.dd.entity.Flock;
 import com.dd.entity.SocketMsg;
 import com.dd.entity.User;
 import com.dd.socket.handler.*;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
@@ -110,7 +113,7 @@ public class Accepter implements IWsMsgHandler {
 			return null;
 		}
 
-		HttpSession session = SessionContext.getInstance().getSession(sessionId);
+		Session session = ShiroSessionListener.get(sessionId);
 		if(session == null){
 			log.debug("用户未登录!");
 			return null;

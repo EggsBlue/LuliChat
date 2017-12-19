@@ -3,7 +3,7 @@
     xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="false"
     monitoring="autodetect" dynamicConfig="true" name="admin">
     
-    <diskStore path="ehcache.disk.store.dir/xv_admin_cache" />
+    <diskStore path="ehcache.disk.store.dir/luli_cache" />
     
     <defaultCache
             maxElementsInMemory="10000"

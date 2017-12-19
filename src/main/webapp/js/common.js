@@ -1,4 +1,4 @@
-var debug = true;
+var debug = false;
 var port = 5210; //socket 端口
 var url = debug ?'localhost' : '106.14.141.88';
 

@@ -67,12 +67,13 @@
             socket = new WebSocket("ws://" + url + ':' + port + '?id=${me}&sessionId=${sessionId}');
             socket.onerror = function (e) {
                 console.log(e);
-                alert("接入Socket失败,请先登录!");
+//                alert("接入Socket失败,会话已过期或者未登录,请先登录!");
+                alert("接入Socket失败,如重新登录依然失败,请手动清除Cookie!我正在解决中...");
                 location.href = '${base}/login.html';
             }
         } catch (err) {
             console.log(err);
-            alert("接入Socket失败,请先登录!");
+            alert("接入Socket失败,如重新登录依然失败,请手动清除Cookie!我正在解决中...");
             location.href = '${base}/login.html';
         }
 

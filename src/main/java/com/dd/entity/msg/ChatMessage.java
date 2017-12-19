@@ -104,7 +104,7 @@ public class ChatMessage {
 	public static final String TIMESTAMP = "timestamp";
 	public static final String CONTENT = "content";
 	public static final String UNREADPOINT = "unreadpoint";
-	public static final String TYPE = "type";
+	public static final String TYPE = "`type`";
 	public static final String TOID = "toid";
 	public static final String FROM = "from";
 	public static final String UNREADNUMBERS = "unreadnumbers";

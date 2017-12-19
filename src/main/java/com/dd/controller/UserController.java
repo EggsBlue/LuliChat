@@ -7,10 +7,16 @@ import com.dd.mvc.Response;
 import com.dd.socket.Type;
 import com.dd.utils.SocketMsgUtils;
 import com.dd.utils.SocketUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.nutz.castor.Castors;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.dao.pager.Pager;
+import org.nutz.integration.shiro.SimpleShiroToken;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
@@ -21,6 +27,9 @@ import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.*;
@@ -51,19 +60,38 @@ public class UserController  {
      * @return
      */
     @At
-    public Object login(@Param("..")User u, HttpSession session){
-        NutMap re = new NutMap();
-        User user = userDao.getByNamPwd(u);
-        if(user == null){
-            re.setv("ok", false).setv("msg", "用户名或密码错误!");
-            return re;
-        }else{
-            session.setAttribute("me", user.getId());
-            session.setAttribute("username", user.getUsername());
-            session.setAttribute("sessionId",session.getId());
-            re.setv("ok", true).setv("msg", "登陆成功!");
-            return re;
+    @POST
+    public Object login(@Param("..")User u, HttpSession session, HttpServletResponse response,HttpServletRequest request){
+
+        String msg = checkUser(u,false);
+        if(msg!=null){
+           return Response.fail(msg);
         }
+//        session.setAttribute("me", user.getId());
+//        session.setAttribute("username", user.getUsername());
+//        session.setAttribute("sessionId",session.getId());
+
+        UsernamePasswordToken token = new UsernamePasswordToken(u.getUsername(),u.getPwd());
+        Subject subject = SecurityUtils.getSubject();
+        try {
+            subject.login(token);//
+        } catch (UnknownAccountException e2){
+           return Response.fail("账户不存在!");
+        }catch ( IncorrectCredentialsException e1){
+            return Response.fail("密码错误!");
+        }
+        User fetch = dao.fetch(User.class, Cnd.where(User.USERNAME, "=", u.getUsername()));
+        if(  SecurityUtils.getSubject().isAuthenticated()){
+
+            subject.getSession().setAttribute("me", fetch.getId());
+            subject.getSession().setAttribute("username", fetch.getUsername());
+            subject.getSession().setAttribute("sessionId", session.getId());
+
+            return Response.ok("登陆成功!");
+        }else{
+            return Response.fail("登录失败!");
+        }
+
     }
 
     /**
@@ -73,7 +101,8 @@ public class UserController  {
      * @return
      */
     @At
-    public Object registry(@Param("..") User user,HttpSession session){
+    @POST
+    public Object registry(@Param("..") User user,HttpSession session,HttpServletResponse response){
         NutMap re = new NutMap();
         String msg = checkUser(user,true);
         if(msg != null){
@@ -90,6 +119,9 @@ public class UserController  {
         }else{
             session.setAttribute("me", user.getId());
             session.setAttribute("username", user.getUsername());
+            session.setAttribute("sessionId",session.getId());
+            response.addCookie(new Cookie("JSESSIONID",session.getId()));
+            response.setHeader("Set-Cookie","JSESSIONID="+session.getId()+";");
             re.setv("ok", true).setv("msg", "注册成功");
 
             //添加默认分组
@@ -426,10 +458,6 @@ public class UserController  {
                     return "wendal大叔可直接登录的哦!\n账户:wendal\n密码:wendal\n(๑′ᴗ‵๑)";
                 }
                 return "用户名已经存在";
-            }
-        } else {
-            if (user.getId() < 1) {
-                return "用户Id非法";
             }
         }
         if (user.getUsername() != null)

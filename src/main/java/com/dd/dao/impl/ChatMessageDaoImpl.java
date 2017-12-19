@@ -48,12 +48,17 @@ public class ChatMessageDaoImpl implements ChatMessageDao {
 		nm.addv("code", 0);
 		nm.addv("message", "");
 		Pager p = new Pager();
-		p.setRecordCount(dao.count(ChatMessage.class, Cnd.where(ChatMessage.FROM,"=",fromId).and(ChatMessage.TOID,"=",toId).or("`from`","=",fromId).and("toid","=",toId).orderBy("timestamp", "desc")));
-	
 		p.setPageNumber(pageNo);
 		p.setPageSize(pageSize);
-//		List<ChatMessage> list = dao.query(ChatMessage.class, Cnd.where(ChatMessage.FROM,"=",fromId).and(ChatMessage.TOID,"=",toId).and(ChatMessage.TYPE,"=",type).orderBy("timestamp", "desc"), p);
-		List<ChatMessage> list  = dao.query(ChatMessage.class, Cnd.where(ChatMessage.FROM,"=",fromId).and(ChatMessage.TOID,"=",toId).or("`from`","=",toId).and("toid","=",fromId).orderBy("timestamp", "dasc"),p);
+		List<ChatMessage> list = null;
+		if(type == 1){//单聊
+			p.setRecordCount(dao.count(ChatMessage.class, Cnd.where(ChatMessage.FROM,"=",toId).and(ChatMessage.TOID,"=",fromId).or("`from`","=",fromId).and("toid","=",toId)));
+			list = dao.query(ChatMessage.class, Cnd.where(ChatMessage.FROM,"=",toId).and(ChatMessage.TOID,"=",fromId).or("`from`","=",fromId).and("toid","=",toId).orderBy("timestamp", "desc"),p);
+		}else{//群聊
+			p.setRecordCount(dao.count(ChatMessage.class, Cnd.where(ChatMessage.TOID,"=",toId).and(ChatMessage.TYPE,"=",2).orderBy("timestamp", "desc")));
+			list = dao.query(ChatMessage.class, Cnd.where(ChatMessage.TOID,"=",toId).and(ChatMessage.TYPE,"=",2).orderBy("timestamp", "dasc"),p);
+		}
+
 		//Collections.reverse(list);
 		nm.addv("pager", p);
 		nm.addv("data", list);

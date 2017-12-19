@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>登录</title>
-		<script src="js/jquery-1.11.1.js"></script>
+		<script src="${base}/js/jquery-1.11.1.js"></script>
 		<script>
 			$(document).ready(function() {
 				$(".form").slideDown(500);
@@ -179,6 +179,7 @@
 				<div class="inp"><input type="text" name="sign" id="sign" placeholder="来个个性签名吧" /></div>
 				<div class="login" onclick="registry()">立即注册</div>
 			</div>
+			<span style="margin: 5px auto; display: block; width: 50%; color: red;">${obj.msg!}</span>
 		</div>
 		<div style="text-align:center;">
 </div>
@@ -202,13 +203,15 @@
 			url:'${base}/user/login',
 			data:{username:name,pwd:pwd},
 			dataType:'json',
+			type:'post',
 			success:function(data){
 				console.log(data);
-				if(data.ok==true){
+				if(data.code ==1){
 					alert('登陆成功!');
 					location.href='${base}/chat.html';
+//                    setCookie("JSESSIONID",data.sid);
 				}else{
-					alert('用户名或密码错误!');
+					alert(data.msg);
 				}
 			}
 		});
@@ -218,7 +221,9 @@
 	function registry(){
 		var name = $.trim($('#uname2').val());
 		var pwd = $.trim($('#upwd2').val());
-		var sign = $.trim($("#sign").val());
+        var upwdto = $.trim($('#upwdto').val());
+
+        var sign = $.trim($("#sign").val());
 		if(name==''){
 			alert('请输入用户名!');
 			return;
@@ -227,11 +232,11 @@
 			alert('请输入密码!');
 			return;
 		} 
-		if($.trim($('#upwdto').val())==''){
+		if(upwdto==''){
 			alert('请再次输入密码!');
 			return;
 		} 
-		if($.trim($('#upwd2').val()) != pwd){
+		if( upwdto != pwd){
 			alert('两次密码不正确!');
 			return;
 		} 
@@ -240,6 +245,7 @@
 			url:'${base}/user/registry',
 			data:{username:name,pwd:pwd,sign:sign},
 			dataType:'json',
+			type:'post',
 			success:function(data){
 				console.log(data);
 				if(data.ok==true){

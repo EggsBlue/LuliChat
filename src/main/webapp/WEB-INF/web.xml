@@ -7,21 +7,26 @@
   <welcome-file-list>
     <welcome-file>login.html</welcome-file>
   </welcome-file-list>
+  <listener>
+    <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
+  </listener>
+  <context-param>
+    <param-name>shiroEnvironmentClass</param-name>
+    <param-value>org.apache.shiro.web.env.IniWebEnvironment</param-value><!-- 默认先从/WEB-INF/shiro.ini，如果没有找classpath:shiro.ini -->
+  </context-param>
+  <context-param>
+    <param-name>shiroConfigLocations</param-name>
+    <param-value>classpath:shiro.ini</param-value>
+  </context-param>
+
   <filter>
-    <filter-name>nutz</filter-name>
-    <filter-class>org.nutz.mvc.NutFilter</filter-class>
-    <init-param>
-      <param-name>modules</param-name>
-      <param-value>com.dd.MainModule</param-value>
-    </init-param>
+    <filter-name>ShiroFilter</filter-name>
+    <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
   </filter>
 
-
   <filter-mapping>
-    <filter-name>nutz</filter-name>
+    <filter-name>ShiroFilter</filter-name>
     <url-pattern>/*</url-pattern>
-    <dispatcher>REQUEST</dispatcher>
-    <dispatcher>FORWARD</dispatcher>
   </filter-mapping>
 
   <filter>
@@ -36,6 +41,23 @@
     <filter-name>DruidWebStatFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+  <filter>
+    <filter-name>nutz</filter-name>
+    <filter-class>org.nutz.mvc.NutFilter</filter-class>
+    <init-param>
+      <param-name>modules</param-name>
+      <param-value>com.dd.MainModule</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>nutz</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
 
 
   <!-- freemarker -->
@@ -88,4 +110,7 @@
     <listener-class>com.dd.listener.SessionListener</listener-class>
   </listener>
 
+  <session-config>
+    <session-timeout>1440000</session-timeout>
+  </session-config>
 </web-app>
