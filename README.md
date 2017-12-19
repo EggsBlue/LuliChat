@@ -2,6 +2,9 @@
 - 没有高端的架构,没有难以理解的高层次封装,一切从简,只为实现功能,可乃新手学习Nutz,T-io,LayUI,LayIM,web通讯的上佳之作;
 - 同样它也是以我女朋友为项目命名的职业生涯中的纪念之作;
 - 该项目为 [MyChat](https://github.com/TopCoderMyDream/MyChat "MyChat") 的迭代版本
+
+  [![Build Status](https://travis-ci.org/nutzam/nutzboot.png?branch=master)](https://travis-ci.org/nutzam/nutzboot)
+  [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
   
 ##  实现的功能有
 - 用户登录
