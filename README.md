@@ -22,7 +22,7 @@
 - 好友上下线提醒
 - 修改签名
 - 桌面消息提醒(浏览器外的弹窗提醒)
-### 待完善
+## 待完善
 - 分组管理
 - 用户分组移动
 - 删除好友
@@ -36,5 +36,8 @@
 
 以上功能主要局限于右键菜单实现不了...
 
-### 特别推荐
+## 特别推荐
    [Nutz](http://nutzam.com/ "Nutz"),[NutzBoot](https://nutz.io/ "NB"),[T-io](https://www.oschina.net/p/t-io "T-io"),[LayIM](http://layim.layui.com)
+   
+## 授权协议
+与Nutz一样, LuliChat遵循[Apache协议](LICENSE),完全开源,文档没有,永远免费(商用也是)
