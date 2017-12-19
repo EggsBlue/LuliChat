@@ -347,14 +347,21 @@
                 s.prepend(o), s.find(".layim-null").remove()
             }
         }
-    }, $ = function () {
+    }, $ = function () {//这里是PC端聊天界面点击发送按钮后的事件处理
+        // alert(1111);
         var i = {
             username: j.mine ? j.mine.username : "访客",
             avatar: j.mine ? j.mine.avatar : layui.cache.dir + "css/pc/layim/skin/logo.jpg",
             id: j.mine ? j.mine.id : null,
             mine: !0
         }, a = _(), e = a.elem.find(".layim-chat-main ul"), l = j.base.maxLength || 3e3;
-        if (i.content = a.textarea.val(), "" !== i.content.replace(/\s/g, "")) {
+        var temp_content = a.textarea.val();
+
+        var reg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
+        //temp_content = temp_content.replace(reg, "<a href='$1$2'>$1$2</a>");
+        temp_content = temp_content.replace(reg, "a($1$2)[$1$2]");
+
+        if (i.content = temp_content, "" !== i.content.replace(/\s/g, "")) {
             if (i.content.length > l) return t.msg("内容最长不能超过" + l + "个字符");
             e.append(n(h).render(i));
             var s = {mine: i, to: a.data}, o = {
