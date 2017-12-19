@@ -3,7 +3,7 @@
 - 同样它也是以我女朋友为项目命名的职业生涯中的纪念之作;
 - 该项目为 [MyChat](https://github.com/TopCoderMyDream/MyChat "MyChat") 的迭代版本
 
-  [![Build Status](https://travis-ci.org/nutzam/nutzboot.png?branch=master)](https://travis-ci.org/nutzam/nutzboot)
+  [![Build Status](https://api.travis-ci.org/TopCoderMyDream/LuliChat.png?branch=master)](https://travis-ci.org/TopCoderMyDream/LuliChat)
   [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
   
 ##  实现的功能有
