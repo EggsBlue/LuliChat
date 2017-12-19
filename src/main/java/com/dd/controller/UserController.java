@@ -117,27 +117,39 @@ public class UserController  {
             re.setv("ok", false).setv("msg", "注册失败!");
             return re;
         }else{
-            session.setAttribute("me", user.getId());
-            session.setAttribute("username", user.getUsername());
-            session.setAttribute("sessionId",session.getId());
-            response.addCookie(new Cookie("JSESSIONID",session.getId()));
-            response.setHeader("Set-Cookie","JSESSIONID="+session.getId()+";");
-            re.setv("ok", true).setv("msg", "注册成功");
+            UsernamePasswordToken token = new UsernamePasswordToken(u.getUsername(),u.getPwd());
+            Subject subject = SecurityUtils.getSubject();
+            try {
+                subject.login(token);//
+            } catch (UnknownAccountException e2){
+                return Response.fail("登录失败,请手动登录!");
+            }catch ( IncorrectCredentialsException e1){
+                return Response.fail("登录失败,请手动登录!");
+            }
 
-            //添加默认分组
-            userDao.addGroup(u.getId(), "亲人们");
-            int i = userDao.addGroup(u.getId(), "Ji友们");
+            if(  SecurityUtils.getSubject().isAuthenticated()){
 
-            //加群
-            FlockRefUser fr = new FlockRefUser();
-            fr.setFid(4);
-            fr.setUid(user.getId());
-            dao.insert(fr);
+                subject.getSession().setAttribute("me", u.getId());
+                subject.getSession().setAttribute("username", u.getUsername());
+                subject.getSession().setAttribute("sessionId", session.getId());
 
-            //把我加上呀得
-            userDao.addFriend(user.getId(), 1, i);
+                //添加默认分组
+                userDao.addGroup(u.getId(), "亲人们");
+                int i = userDao.addGroup(u.getId(), "Ji友们");
 
-            userDao.addFriend(1,user.getId(), 2);
+                //加群
+                FlockRefUser fr = new FlockRefUser();
+                fr.setFid(4);
+                fr.setUid(user.getId());
+                dao.insert(fr);
+
+                //把我加上呀得
+                userDao.addFriend(user.getId(), 1, i);
+                userDao.addFriend(1,user.getId(), 2);
+                re.setv("ok", true).setv("msg", "注册成功!");
+            }else{
+                re.setv("ok", true).setv("msg", "自动登录失败,请手动登录!");
+            }
 
             return re;
         }
