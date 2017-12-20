@@ -3,13 +3,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>LuliChat</title>
-    <link rel="stylesheet" href="layim/css/layui.css">
+    <link rel="stylesheet" href="${base}/layim-v3.7.5/dist/css/layui.css">
     <link rel="stylesheet" href="${base}/css/menu.css">
-    <script src="layim/layui.js" charset="utf-8"></script>
-    <script src="js/common.js"></script>
-    <script src="js/swfobject.js"></script>
-    <script src="js/web_socket.js"></script>
-    <script src="js/hgUtils.js"></script>
+    <script src="${base}/layim-v3.7.5/dist/layui.js" charset="utf-8"></script>
+    <script src="${base}/js/common.js"></script>
+    <script src="${base}/js/swfobject.js"></script>
+    <script src="${base}/js/web_socket.js"></script>
+    <script src="${base}/js/hgUtils.js"></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -172,7 +172,7 @@
                 res.type = 'group';
                 res.action = TYPE.GROUP_MSG_REQ;
             }
-            //console.log(res);
+            console.log(res);
             res = JSON.stringify(res);
             socket.send(res);
             // layim.msgbox(5);

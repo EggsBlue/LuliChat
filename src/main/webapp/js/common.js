@@ -2,7 +2,6 @@ var debug = false;
 var port = 5210; //socket 端口
 var url = debug ?'localhost' : '106.14.141.88';
 
-
 var TYPE = {
     REQFRIEND:'1',   //请求加好友
      P2PMSG : "5",    //点对点消息
