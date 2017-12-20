@@ -18,6 +18,8 @@ public class SendMessage {
 	private String fromid;//消息的发送者id（比如群组中的某个消息发送者），可用于自动解决浏览器多窗口时的一些问题
 	private Long timestamp;//时间戳
 
+
+
 	public String getUsername() {
 		return username;
 	}
@@ -75,6 +77,7 @@ public class SendMessage {
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
+
 	@Override
 	public String toString() {
 		return "SendMessage [username=" + username + ", avatar=" + avatar + ", id=" + id + ", type=" + type

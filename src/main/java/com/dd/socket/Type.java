@@ -53,4 +53,8 @@ public interface Type {
      */
     byte REQFRIENDSUCCESS = 11;
 
+    /**
+     * 在线人数
+     */
+    byte ONLINECOUNT = 12;
 }

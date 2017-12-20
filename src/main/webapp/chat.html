@@ -10,8 +10,16 @@
     <script src="${base}/js/swfobject.js"></script>
     <script src="${base}/js/web_socket.js"></script>
     <script src="${base}/js/hgUtils.js"></script>
+    <style type="text/css">
+        #onlineBox{
+            float: left;
+            margin: 10px;
+        }
+        #onlineCount{}
+    </style>
 </head>
 <body>
+<div id="onlineBox">当前在线人数:<span id="onlineCount" style="display:none;">0</span><span><img src="${base}/img/load.gif" style="width: 15px;" alt="" id="loading"></span>人 </div>
 <script type="text/javascript">
     var socket;
     var $ = layui.jquery;
@@ -104,12 +112,6 @@
             var body = JSON.parse(data.body);
             if (data.action != 'undefined') {
                 switch (data.action) {
-                    case "offline":
-                        layer.msg(data.msg, {icon: 5, offset: 'lb'});
-                        break;
-                    case "online":
-                        layer.msg(data.msg, {icon: 1, offset: 'lb'});
-                        break;
                     case parseInt(TYPE.P2PMSG):
                         //console.log("P2pMsg...");
                         layim.getMessage(JSON.parse(data.body));
@@ -119,16 +121,22 @@
                         layim.getMessage(JSON.parse(data.body));
                         break;
                     case parseInt(TYPE.OLDMSG):
-                        //console.log("oldMsg");
+                        console.log("oldMsg");
                         layim.getMessage(JSON.parse(data.body));
                         break;
                     case parseInt(TYPE.SUCCESS_MESSAGE_RESP):
                         //console.log("success 消息");
                         layer.msg(body.msg, {icon: 1, offset: 'lb'});
+                        $('#loading').hide();
+                        $('#onlineCount').show();
+                        $('#onlineCount').text(body.count);
                         break;
                     case parseInt(TYPE.FAIL_MESSAGE_RESP):
                         //console.log("fail 消息");
                         layer.msg(body.msg, {icon: 5, offset: 'lb'});
+                        $('#loading').hide();
+                        $('#onlineCount').show();
+                        $('#onlineCount').text(body.count);
                         break;
                     case parseInt(TYPE.REQFRIEND):
                         layim.msgbox("新");
@@ -152,6 +160,11 @@
                         //console.log("加群成功...");
                         layim.addList(body);
                         layim.msgbox("新");
+                        break;
+                    case parseInt(TYPE.ONLINECOUNT):
+                        $('#loading').hide();
+                        $('#onlineCount').show();
+                        $('#onlineCount').text(body.count);
                         break;
                     default:
                         layer.msg("非法消息规格!");

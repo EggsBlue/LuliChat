@@ -1,6 +1,5 @@
 package com.dd.socket.handler;
 
-import com.dd.utils.SocketMsgUtils;
 import com.dd.dao.UserDao;
 import com.dd.dao.impl.ChatMessageDaoImpl;
 import com.dd.entity.SocketMsg;
@@ -8,12 +7,14 @@ import com.dd.entity.msg.ChatMessage;
 import com.dd.entity.msg.SendMessage;
 import com.dd.socket.MsgHandlerInterface;
 import com.dd.socket.Type;
+import com.dd.utils.SocketMsgUtils;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
 import org.nutz.lang.util.NutMap;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
+import org.tio.utils.lock.SetWithLock;
 
 import java.util.List;
 
@@ -60,6 +61,7 @@ public class OldMessageHandler implements MsgHandlerInterface {
                             sendMessage.setTimestamp(Long.valueOf(c.getTimestamp()));
                             String strJson = Json.toJson(sendMessage);
                             System.out.println("好友消息:" + strJson);
+
                             Aio.send(context, SocketMsgUtils.madeWsResponse(Type.OLD_MESSAGE_REQ_MSG,strJson));
 //                    		session.getAsyncRemote().sendText(strJson);
 //                        try {
@@ -86,10 +88,12 @@ public class OldMessageHandler implements MsgHandlerInterface {
 //                    		}
 //                    		sendMessage.setFromid(mine.get("id"));
                             sendMessage.setTimestamp(Long.valueOf(c.getTimestamp()));
+
                             String strJson = Json.toJson(sendMessage);
 //                    		String strJson = sendMessage.toJson();
                             System.out.println(strJson);
                             Aio.send(context, SocketMsgUtils.madeWsResponse(Type.OLD_MESSAGE_REQ_MSG,strJson));
+                            sendOnlineCount(context);
 //                    		session.getAsyncRemote().sendText(strJson);
 //                        try {
 //                            session.getBasicRemote().sendText(strJson);
@@ -99,9 +103,13 @@ public class OldMessageHandler implements MsgHandlerInterface {
 //                        }
                         }
                     }
+                }else{
+                    //没有未读消息
+                    this.sendOnlineCount(context);
                 }
             }else{
                 //没有未读消息
+                this.sendOnlineCount(context);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,4 +119,14 @@ public class OldMessageHandler implements MsgHandlerInterface {
 
         return null;
     }
+
+    /**
+     * 通知客户端当前在线人数
+     * @param context
+     */
+    public void sendOnlineCount(ChannelContext context){
+        SetWithLock<ChannelContext> allConnectedsChannelContexts = Aio.getAllConnectedsChannelContexts(context.getGroupContext());
+        Aio.send(context, SocketMsgUtils.madeWsResponse(Type.ONLINECOUNT,Json.toJson(new NutMap().setv("count",allConnectedsChannelContexts.getObj().size()))));
+    }
+
 }

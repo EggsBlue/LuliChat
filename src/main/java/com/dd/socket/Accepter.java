@@ -153,7 +153,7 @@ public class Accepter implements IWsMsgHandler {
 		//直接调用 sendToAll方法会导致错误,不知何种原因
 //		Aio.sendToAll(context.getGroupContext(), SocketMsgUtils.madeWsResponse(Type.SUCCESS_MESSAGE_RESP,Json.toJson(NutMap.NEW().setv("msg",name+"上线了!"))));
 		SetWithLock<ChannelContext> allConnectedsChannelContexts = Aio.getAllConnectedsChannelContexts(context.getGroupContext());
-		Aio.sendToSet(context.getGroupContext(), allConnectedsChannelContexts, SocketMsgUtils.madeWsResponse(Type.SUCCESS_MESSAGE_RESP, Json.toJson(NutMap.NEW().setv("msg", name + "上线了!"))), new ChannelContextFilter() {
+		Aio.sendToSet(context.getGroupContext(), allConnectedsChannelContexts, SocketMsgUtils.madeWsResponse(Type.SUCCESS_MESSAGE_RESP, Json.toJson(NutMap.NEW().setv("msg", name + "上线了!").setv("count",allConnectedsChannelContexts.getObj().size()))), new ChannelContextFilter() {
 			@Override
 			public boolean filter(ChannelContext channelContext) {
 				if(context == channelContext){
@@ -171,7 +171,7 @@ public class Accepter implements IWsMsgHandler {
 
 	public void offLineMsg(String name,ChannelContext context){
 		SetWithLock<ChannelContext> allConnectedsChannelContexts = Aio.getAllConnectedsChannelContexts(context.getGroupContext());
-		Aio.sendToSet(context.getGroupContext(), allConnectedsChannelContexts, SocketMsgUtils.madeWsResponse(Type.FAIL_MESSAGE_RESP, Json.toJson(NutMap.NEW().setv("msg", name + "下线了!"))), new ChannelContextFilter() {
+		Aio.sendToSet(context.getGroupContext(), allConnectedsChannelContexts, SocketMsgUtils.madeWsResponse(Type.FAIL_MESSAGE_RESP, Json.toJson(NutMap.NEW().setv("msg", name + "下线了!").setv("count",allConnectedsChannelContexts.getObj().size()))), new ChannelContextFilter() {
 			@Override
 			public boolean filter(ChannelContext channelContext) {
 				if(context == channelContext){
