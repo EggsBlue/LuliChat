@@ -1,6 +1,6 @@
 /*
 SQLyog Ultimate v12.4.3 (64 bit)
-MySQL - 5.7.18-log : Database - mychat
+MySQL - 5.5.58-0ubuntu0.14.04.1 : Database - mychat
 *********************************************************************
 */
 
@@ -12,7 +12,7 @@ MySQL - 5.7.18-log : Database - mychat
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`mychat` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`mychat` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `mychat`;
 
@@ -33,7 +33,18 @@ CREATE TABLE `chatmessage` (
   `unreadnumbers` text COMMENT '针对群组,此消息的未读人员',
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1142 DEFAULT CHARSET=utf8 COMMENT='聊天记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=2642 DEFAULT CHARSET=utf8 COMMENT='聊天记录表';
+
+/*Data for the table `chatmessage` */
+
+insert  into `chatmessage`(`id`,`username`,`avatar`,`timestamp`,`content`,`unreadpoint`,`type`,`toid`,`from`,`unreadnumbers`) values 
+(526,'wendal','imgs/5.jpg','1513148180462','1',0,1,1,29,''),
+(527,'wendal','imgs/5.jpg','1513148758016','111',0,1,1,29,''),
+(528,'wendal','imgs/5.jpg','1513149633046','ww',0,1,31,29,''),
+(529,'蛋蛋的忧伤','imgs/8.jpg','1513153689994','face[抱抱] ',0,1,29,1,NULL),
+(530,'wendal','imgs/5.jpg','1513153695406','哦哦哦',0,1,1,29,NULL),
+(531,'蛋蛋的忧伤','imgs/8.jpg','1513153699946','face[亲亲] ',0,1,29,1,NULL),
+(2641,'chaozi','imgs/2.jpg','1514427829515','dadwdqw',0,1,1,417,NULL);
 
 /*Table structure for table `flock` */
 
@@ -45,7 +56,16 @@ CREATE TABLE `flock` (
   `groupname` varchar(30) DEFAULT NULL COMMENT '群名称',
   `avatar` varchar(100) DEFAULT NULL COMMENT '头像',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='群组';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='群组';
+
+/*Data for the table `flock` */
+
+insert  into `flock`(`id`,`userid`,`groupname`,`avatar`) values 
+(2,1,'老铁一家人','imgs/laotie.jpg'),
+(3,1,'实现你的梦想','imgs/8.jpg'),
+(4,1,'Nutz社区群','imgs/10.jpg'),
+(5,1,'LayUI/LayIm社区群','imgs/layuilogo.png'),
+(6,1,'T-io社区群','imgs/tiologo.png');
 
 /*Table structure for table `flockrefuser` */
 
@@ -55,6 +75,16 @@ CREATE TABLE `flockrefuser` (
   `uid` int(11) DEFAULT NULL COMMENT '用户id',
   `fid` int(11) DEFAULT NULL COMMENT '群组id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户群组多对多';
+
+/*Data for the table `flockrefuser` */
+
+insert  into `flockrefuser`(`uid`,`fid`) values 
+(2,2),
+(1,2),
+(1,3),
+(1,4),
+(1,5),
+(1,6);
 
 /*Table structure for table `friends` */
 
@@ -66,6 +96,11 @@ CREATE TABLE `friends` (
   `groupid` int(11) DEFAULT NULL COMMENT '所在分组'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='好友关系表';
 
+/*Data for the table `friends` */
+
+insert  into `friends`(`me`,`friend`,`groupid`) values 
+(1,2,1);
+
 /*Table structure for table `group` */
 
 DROP TABLE IF EXISTS `group`;
@@ -75,7 +110,13 @@ CREATE TABLE `group` (
   `user_id` int(11) DEFAULT NULL COMMENT '用户编号',
   `groupname` varchar(30) DEFAULT NULL COMMENT '分组名',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=181 DEFAULT CHARSET=utf8 COMMENT='分组';
+) ENGINE=InnoDB AUTO_INCREMENT=813 DEFAULT CHARSET=utf8 COMMENT='分组';
+
+/*Data for the table `group` */
+
+insert  into `group`(`id`,`user_id`,`groupname`) values 
+(1,1,'亲人们'),
+(2,1,'Ji友们');
 
 /*Table structure for table `message` */
 
@@ -93,7 +134,9 @@ CREATE TABLE `message` (
   `read` int(11) DEFAULT NULL COMMENT '是否已读 1.已读. 0.未读',
   `time` datetime DEFAULT NULL COMMENT '时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8 COMMENT='加群消息';
+) ENGINE=InnoDB AUTO_INCREMENT=161 DEFAULT CHARSET=utf8 COMMENT='加群消息';
+
+/*Data for the table `message` */
 
 /*Table structure for table `user` */
 
@@ -107,7 +150,13 @@ CREATE TABLE `user` (
   `avatar` varchar(200) DEFAULT NULL COMMENT '头像',
   `status` varchar(20) DEFAULT NULL COMMENT '在线状态',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=420 DEFAULT CHARSET=utf8 COMMENT='用户表';
+
+/*Data for the table `user` */
+
+insert  into `user`(`id`,`username`,`pwd`,`sign`,`avatar`,`status`) values 
+(1,'蛋蛋的忧伤','123456','nutz是世界上最好的java编程框架','imgs/8.jpg','online'),
+(2,'wendal','123456','我是nutz的作者','imgs/5.jpg',NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

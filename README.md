@@ -39,9 +39,12 @@
 
 以上功能主要局限于右键菜单实现不了...
 
+## 缺少的依赖
+    由于layim是收费的,所以你需要手动将layim.js放入layim-v3.7.5/dist/lay/modules/下
+
 ## 特别推荐
    [Nutz](http://nutzam.com/ "Nutz"),[NutzBoot](https://nutz.io/ "NB"),[T-io](https://www.oschina.net/p/t-io "T-io"),[LayIM](http://layim.layui.com)
-   
+ 
 ## 授权协议
 与Nutz一样, LuliChat遵循[Apache协议](LICENSE),完全开源,文档没有,永远免费(商用也是)
 
