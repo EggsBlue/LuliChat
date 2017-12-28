@@ -99,6 +99,7 @@ CREATE TABLE `friends` (
 /*Data for the table `friends` */
 
 insert  into `friends`(`me`,`friend`,`groupid`) values 
+(2,1,813),
 (1,2,1);
 
 /*Table structure for table `group` */
@@ -110,13 +111,15 @@ CREATE TABLE `group` (
   `user_id` int(11) DEFAULT NULL COMMENT '用户编号',
   `groupname` varchar(30) DEFAULT NULL COMMENT '分组名',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=813 DEFAULT CHARSET=utf8 COMMENT='分组';
+) ENGINE=InnoDB AUTO_INCREMENT=814 DEFAULT CHARSET=utf8 COMMENT='分组';
 
 /*Data for the table `group` */
 
 insert  into `group`(`id`,`user_id`,`groupname`) values 
 (1,1,'亲人们'),
-(2,1,'Ji友们');
+(2,1,'Ji友们'),
+(3,2,'亲人们'),
+(813,2,'Ji友们');
 
 /*Table structure for table `message` */
 
@@ -134,9 +137,13 @@ CREATE TABLE `message` (
   `read` int(11) DEFAULT NULL COMMENT '是否已读 1.已读. 0.未读',
   `time` datetime DEFAULT NULL COMMENT '时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=161 DEFAULT CHARSET=utf8 COMMENT='加群消息';
+) ENGINE=InnoDB AUTO_INCREMENT=163 DEFAULT CHARSET=utf8 COMMENT='加群消息';
 
 /*Data for the table `message` */
+
+insert  into `message`(`id`,`content`,`uid`,`from`,`from_group`,`type`,`remark`,`href`,`read`,`time`) values 
+(161,'申请添加你为好友',2,1,1,3,'1',NULL,0,'2017-12-28 14:03:00'),
+(162,'成功添加对方为好友!',1,2,1,3,'',NULL,1,'2017-12-28 14:04:06');
 
 /*Table structure for table `user` */
 
@@ -156,7 +163,7 @@ CREATE TABLE `user` (
 
 insert  into `user`(`id`,`username`,`pwd`,`sign`,`avatar`,`status`) values 
 (1,'蛋蛋的忧伤','123456','nutz是世界上最好的java编程框架','imgs/8.jpg','online'),
-(2,'wendal','123456','我是nutz的作者','imgs/5.jpg',NULL);
+(2,'wendal','123456','我是nutz的作者','imgs/5.jpg','online');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
