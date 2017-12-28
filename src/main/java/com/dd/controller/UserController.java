@@ -127,8 +127,7 @@ public class UserController  {
                 return Response.fail("登录失败,请手动登录!");
             }
 
-            if(  SecurityUtils.getSubject().isAuthenticated()){
-
+            if( SecurityUtils.getSubject().isAuthenticated()){
                 subject.getSession().setAttribute("me", u.getId());
                 subject.getSession().setAttribute("username", u.getUsername());
                 subject.getSession().setAttribute("sessionId", session.getId());
@@ -138,10 +137,20 @@ public class UserController  {
                 int i = userDao.addGroup(u.getId(), "Ji友们");
 
                 //加群
-                FlockRefUser fr = new FlockRefUser();
+                FlockRefUser fr = new FlockRefUser();//Nutz社区群
                 fr.setFid(4);
                 fr.setUid(user.getId());
                 dao.insert(fr);
+
+                FlockRefUser fr2 = new FlockRefUser();//Layui群
+                fr2.setFid(5);
+                fr2.setUid(user.getId());
+                dao.insert(fr2);
+
+                FlockRefUser fr3 = new FlockRefUser();//T-io群
+                fr3.setFid(6);
+                fr3.setUid(user.getId());
+                dao.insert(fr3);
 
                 //把我加上呀得
                 userDao.addFriend(user.getId(), 1, i);
