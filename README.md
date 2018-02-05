@@ -2,6 +2,7 @@
 - 没有高端的架构,没有难以理解的高层次封装,一切从简,只为实现功能,可乃新手学习Nutz,T-io,LayUI,LayIM,web通讯的上佳之作;
 - 同样它也是以我女朋友为项目命名的职业生涯中的纪念之作;
 - 该项目为 [MyChat](https://github.com/TopCoderMyDream/MyChat "MyChat") 的迭代版本
+- [NutzBoot版本](https://github.com/TopCoderMyDream/LuliChat/tree/nutzboot "NutzBoot")
 
   [![Build Status](https://api.travis-ci.org/TopCoderMyDream/LuliChat.png?branch=master)](https://travis-ci.org/TopCoderMyDream/LuliChat)
   [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
@@ -39,12 +40,9 @@
 
 以上功能主要局限于右键菜单实现不了...
 
-## 缺少的依赖
-    由于layim是收费的,所以你需要手动将layim.js放入layim-v3.7.5/dist/lay/modules/下
-
 ## 特别推荐
    [Nutz](http://nutzam.com/ "Nutz"),[NutzBoot](https://nutz.io/ "NB"),[T-io](https://www.oschina.net/p/t-io "T-io"),[LayIM](http://layim.layui.com)
- 
+   
 ## 授权协议
 与Nutz一样, LuliChat遵循[Apache协议](LICENSE),完全开源,文档没有,永远免费(商用也是)
 
