@@ -3,13 +3,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>LuliChat</title>
-    <link rel="stylesheet" href="${base}/layim-v3.7.5/dist/css/layui.css">
-    <link rel="stylesheet" href="${base}/css/menu.css">
-    <script src="${base}/layim-v3.7.5/dist/layui.js" charset="utf-8"></script>
-    <script src="${base}/js/common.js"></script>
-    <script src="${base}/js/swfobject.js"></script>
-    <script src="${base}/js/web_socket.js"></script>
-    <script src="${base}/js/hgUtils.js"></script>
+    <link rel="stylesheet" href="${base!}/layim-v3.7.5/dist/css/layui.css">
+    <link rel="stylesheet" href="${base!}/css/menu.css">
+    <script src="${base!}/layim-v3.7.5/dist/layui.js" charset="utf-8"></script>
+    <script src="${base!}/js/common.js"></script>
+    <script src="${base!}/js/swfobject.js"></script>
+    <script src="${base!}/js/web_socket.js"></script>
+    <script src="${base!}/js/hgUtils.js"></script>
     <style type="text/css">
         #onlineBox{
             float: left;
@@ -19,11 +19,11 @@
     </style>
 </head>
 <body>
-<div id="onlineBox">当前在线人数:<span id="onlineCount" style="display:none;">0</span><span><img src="${base}/img/load.gif" style="width: 15px;" alt="" id="loading"></span>人 </div>
+<div id="onlineBox">当前在线人数:<span id="onlineCount" style="display:none;">0</span><span><img src="${base!}/img/load.gif" style="width: 15px;" alt="" id="loading"></span>人 </div>
 <script type="text/javascript">
     var socket;
     var $ = layui.jquery;
-    var base = '${base}';
+    var base = '${base!}';
     var menu;
 
     layui.extend({
@@ -41,15 +41,15 @@
             msgbox: layui.cache.dir + 'css/modules/layim/html/msgbox.html',
             brief: false,
             find: base + '/find.html', //发现页面地址，若不开启，剔除该项即可,
-            title: '${username}',
+            title: '${Session.username!}',
             //可同时配置多个
             tool: [],
             uploadImage: {
-                url:'${base}/upload/image'
+                url:'${base!}/upload/image'
             },
             //上传文件接口（返回的数据格式见下文）
             uploadFile: {
-                url: '${base}/upload/files' //接口地址
+                url: '${base!}/upload/files' //接口地址
                 , type: 'post' //默认post
             }
             //查看群员接口
@@ -68,36 +68,36 @@
 //            console.log(obj);
         });
 
-//	    console.log(url+':'+port+'?id=${me}&cookie='+getCookie("JSESSIONID"));
+//	    console.log(url+':'+port+'?id=${Session.me!}&cookie='+getCookie("JSESSIONID"));
 //      setCookie("AAA","123");
 //      console.log("Hm_lvt_b393d153aeb26b46e9431fabaf0f6190:"+getCookie("Hm_lvt_b393d153aeb26b46e9431fabaf0f6190"));
         try {
-            socket = new WebSocket("ws://" + url + ':' + port + '?id=${me}&sessionId=${sessionId}');
+            socket = new WebSocket("ws://" + url + ':' + port + '?id=${Session.me!}&sessionId=${Session.sessionId!}');
             socket.onerror = function (e) {
                 console.log(e);
 //                alert("接入Socket失败,会话已过期或者未登录,请先登录!");
                 alert("接入Socket失败,如重新登录依然失败,请手动清除Cookie!我正在解决中...");
-                location.href = '${base}/login.html';
+                // location.href = '${base!}/login.html';
             }
         } catch (err) {
             console.log(err);
             alert("接入Socket失败,如重新登录依然失败,请手动清除Cookie!我正在解决中...");
-            location.href = '${base}/login.html';
+            // location.href = '${base!}/login.html';
         }
 
         //接入websocket
         //连接成功时触发
         socket.onopen = function () {
-            console.log("${username}登陆成功...");
+            console.log("${Session.username!}登陆成功...");
             //取查未读消息
-            socket.send(JSON.stringify({'action': '8', 'body': '{me:${me},name:"${username}"}'}));
+            socket.send(JSON.stringify({'action': '8', 'body': '{me:${Session.me!},name:"${Session.username!}"}'}));
 //	 		console.log(JSON.stringify({'action':'oldMsg'}));
             layer.msg('接入成功...', {icon: 1, offset: 'lb'});
         }
 
         socket.onclose = function () {
 //	        alert("真的要结束了...");
-//	    	console.log("${username} 下线成功...");
+//	    	console.log("${Session.username!} 下线成功...");
 //	    	layer.msg('您已下线...',{icon: 5,offset: 'lb'});
         }
 
@@ -197,7 +197,7 @@
             layim.setFriendStatus(2, 'offline');
             //查询是否有未读消息
             $.ajax({
-                url: '${base}/user/unreadMsgCount',
+                url: '${base!}/user/unreadMsgCount',
                 success: function (data) {
 //	    			  //console.log(data);
                     //获取不到当下消息数量...
@@ -254,15 +254,15 @@
             //监听切换在线状态回调
             layim.on('online', function (status) {
                 if (status == 'online') {
-                    $.get('${base}/user/online');
+                    $.get('${base!}/user/online');
                 } else {
-                    $.get('${base}/user/hide');
+                    $.get('${base!}/user/hide');
                 }
             });
 
             //监听修改签名回调
             layim.on('sign', function (value) {
-                $.get('${base}/user/updateSign', {'sign': value});
+                $.get('${base!}/user/updateSign', {'sign': value});
             });
 
             //每次窗口打开或切换，即更新对方的状态
@@ -271,7 +271,7 @@
                 //console.log(res);
                 if (type === 'friend') {
                     var id = res.data.id;
-                    $.get('${base}/user/getUser', {'id': id}, function (data) {
+                    $.get('${base!}/user/getUser', {'id': id}, function (data) {
                         //console.log(data);
                         if (data.status == 'online') {
                             layim.setChatStatus('<span style="color:#FF5722;">在线</span>'); //模拟标注好友在线状态

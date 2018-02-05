@@ -1,9 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dd</groupId>
   <artifactId>LuliChat</artifactId>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>LuliChat Maven Webapp</name>
   <url>http://maven.apache.org</url>
@@ -11,32 +12,35 @@
   <properties>
     <!-- UTF8大法好 -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <nutzboot-version>2.2-SNAPSHOT</nutzboot-version>
   </properties>
 
   <dependencies>
-    <!-- 核心jar -->
+      <dependency>
+        <groupId>org.nutz</groupId>
+        <artifactId>nutzboot-starter-jetty</artifactId>
+        <version>${nutzboot-version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.nutz</groupId>
+          <artifactId>nutzboot-starter-nutz-mvc</artifactId>
+          <version>${nutzboot-version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.nutz</groupId>
+        <artifactId>nutzboot-starter-shiro</artifactId>
+        <version>${nutzboot-version}</version>
+      </dependency>
     <dependency>
       <groupId>org.nutz</groupId>
-      <artifactId>nutz</artifactId>
-      <version>1.r.63.r2</version>
+      <artifactId>nutzboot-starter-freemarker</artifactId>
+      <version>${nutzboot-version}</version>
     </dependency>
     <!-- mysql驱动 -->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>5.1.40</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <!-- Druid连接池 -->
-    <dependency>
-      <groupId>com.alibaba</groupId>
-      <artifactId>druid</artifactId>
-      <version>1.1.5</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
@@ -49,12 +53,16 @@
       <version>1.7.21</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
-      <groupId>org.freemarker</groupId>
-      <artifactId>freemarker</artifactId>
-      <version>2.3.26-incubating</version>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid</artifactId>
+      <version>1.1.5</version>
     </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.freemarker</groupId>-->
+      <!--<artifactId>freemarker</artifactId>-->
+      <!--<version>2.3.26-incubating</version>-->
+    <!--</dependency>-->
 
     <dependency>
       <groupId>org.t-io</groupId>
@@ -78,47 +86,49 @@
       <!--<version>1.r.57</version>-->
     <!--</dependency>-->
 
-    <dependency>
-      <groupId>org.nutz</groupId>
-      <artifactId>nutz-plugins-views</artifactId>
-      <version>1.r.62</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-    </dependency>
-    <dependency>
-      <groupId>org.nutz</groupId>
-      <artifactId>nutz-integration-shiro</artifactId>
-      <version>1.r.60</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.shiro</groupId>
-      <artifactId>shiro-all</artifactId>
-      <version>1.4.0</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>ehcache-core</artifactId>
-          <groupId>net.sf.ehcache</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.shiro</groupId>
-      <artifactId>shiro-core</artifactId>
-      <version>1.4.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.shiro</groupId>
-      <artifactId>shiro-web</artifactId>
-      <version>1.4.0</version>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.nutz</groupId>-->
+      <!--<artifactId>nutz-plugins-views</artifactId>-->
+      <!--<version>1.r.63.r5</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+      <!--<groupId>org.nutz</groupId>-->
+      <!--<artifactId>nutz-integration-shiro</artifactId>-->
+      <!--<version>1.r.60</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+      <!--<groupId>org.apache.shiro</groupId>-->
+      <!--<artifactId>shiro-all</artifactId>-->
+      <!--<version>1.4.0</version>-->
+      <!--<exclusions>-->
+        <!--<exclusion>-->
+          <!--<artifactId>ehcache-core</artifactId>-->
+          <!--<groupId>net.sf.ehcache</groupId>-->
+        <!--</exclusion>-->
+      <!--</exclusions>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+      <!--<groupId>org.apache.shiro</groupId>-->
+      <!--<artifactId>shiro-core</artifactId>-->
+      <!--<version>1.4.0</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+      <!--<groupId>org.apache.shiro</groupId>-->
+      <!--<artifactId>shiro-web</artifactId>-->
+      <!--<version>1.4.0</version>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>1.1.3</version>
     </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+    </dependency>
+
     <!--<dependency>-->
       <!--<groupId>org.springframework</groupId>-->
       <!--<artifactId>spring-aop</artifactId>-->
@@ -143,23 +153,6 @@
       </plugin>
     </plugins>
   </build>
-  <repositories>
-    <repository>
-      <id>nutz</id>
-      <url>https://jfrog.nutz.cn/artifactory/jcenter</url>
-    </repository>
-    <repository>
-      <id>nutz-snapshots</id>
-      <url>https://jfrog.nutz.cn/artifactory/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-  </repositories>
 
   <profiles>
     <profile>
@@ -177,4 +170,24 @@
     </profile>
   </profiles>
 
+  <repositories>
+    <repository>
+      <id>nutz</id>
+      <url>http://jfrog.nutz.cn/artifactory/libs-release</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>nutz-snapshots</id>
+      <url>http://jfrog.nutz.cn/artifactory/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
 </project>

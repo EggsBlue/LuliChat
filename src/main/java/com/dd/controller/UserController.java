@@ -657,6 +657,11 @@ public class UserController  {
         return str;
     }
 
+    @At("/login")
+    @Ok("fm:/login")
+    public Object login(){
+        return "";
+    }
 
 //    @At
 //    @Ok("fm:/user/hello")

@@ -13,7 +13,8 @@ import org.tio.websocket.server.handler.IWsMsgHandler;
 
 import java.io.IOException;
 
-public class MySetup implements Setup{
+
+public class InitSetup implements Setup{
     Log log = Logs.get();
 
     @Override
@@ -26,5 +27,6 @@ public class MySetup implements Setup{
 
     @Override
     public void destroy(NutConfig nc) {
+
     }
 }

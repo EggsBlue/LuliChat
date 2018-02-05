@@ -26,7 +26,7 @@ public class SocketServer {
         IWsMsgHandler accepter = getIoc().get(IWsMsgHandler.class, "accepter");
         PropertiesProxy conf = getIoc().get(PropertiesProxy.class, "conf");
         int port = 5210;
-        port = Integer.valueOf( conf.get("tio.port"));
+        port = Integer.valueOf( conf.get("websocket.port"));
         try {
             WsServerStarter wsServerStarter = new WsServerStarter(port, accepter);
             groupContext= wsServerStarter.getServerGroupContext();

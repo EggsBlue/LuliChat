@@ -25,6 +25,12 @@
 	#content li:nth-child(3n+1){
 		margin-left: 3%;
 	}
+	.show_name{
+		/*display: -webkit-box;*/
+		/*-webkit-box-orient: vertical;*/
+		/*-webkit-line-clamp: 3;*/
+		/*overflow: hidden;*/
+	}
 </style>
 <div class="layim-add-box" style="display: none;" id="box">
 	<div class="layim-add-img">
@@ -78,7 +84,7 @@
 	  ,laypage = layui.laypage;
 
 
-        $.get('${base}/user/random',function(data){
+        $.get('${base!}/user/random',function(data){
             //console.log(data);
             for(var i=0; i<data.length; i++){
                 //console.log(data[i]);
@@ -97,7 +103,7 @@
 			}
 		   
 			$.ajax({
-				url:'${base}/user/seach',
+				url:'${base!}/user/seach',
 				dataType:'json',
 				data:{name:name},
 				async:false,
@@ -115,7 +121,7 @@
 							}else{
 								status = "<span style=\"color:#DD691D;\">离线</span>";
 							}
-							var li = '<li id='+this.id+'> <img style="border-radius: 20px; display: inline;width:100px; height:100px; float: left;" src=\''+this.avatar+'\' > <div style="float: left;"> <span style="font-size: 24px; color: buttonshadow; margin: 6px; margin-left: 17px;">'+this.username+'</span>'+status+' <div style="display: block; margin-top: 10px; margin-left: 5px;"><button class="layui-btn layui-btn-radius layui-btn-normal" data-type="agree" onclick="addFriend(this)">加好友</button></div> </div> </li>';
+							var li = '<li id='+this.id+'> <img style="border-radius: 20px; display: inline;width:100px; height:100px; float: left;" src=\''+this.avatar+'\' > <div style="float: left;"> <span class="show_name" style="font-size: 24px; color: buttonshadow; margin: 6px; margin-left: 17px;">'+this.username+'</span>'+status+' <div style="display: block; margin-top: 10px; margin-left: 5px;"><button class="layui-btn layui-btn-radius layui-btn-normal" data-type="agree" onclick="addFriend(this)">加好友</button></div> </div> </li>';
 							$('#content').append(li);
 						});
 					}else{
@@ -126,7 +132,7 @@
                         $(groups).each(function(){
                             var status = "";
 							status = "<span style=\"color:#3FDD86;\">群组</span>";
-                            var li = '<li id='+this.id+'> <img style="border-radius: 20px; display: inline;width:100px; height:100px; float: left;" src=\''+this.avatar+'\' > <div style="float: left;"> <span style="font-size: 24px; color: buttonshadow; margin: 6px; margin-left: 17px;">'+this.groupname+'</span>'+status+' <div style="display: block; margin-top: 10px; margin-left: 5px;"><button class="layui-btn layui-btn-radius layui-btn-normal" data-type="agree" group_id='+this.id+' avatar='+this.avatar+' onclick="innerGroup(this)"  group_name='+this.groupname+'>加群</button></div> </div> </li>';
+                            var li = '<li id='+this.id+'> <img style="border-radius: 20px; display: inline;width:100px; height:100px; float: left;" src=\''+this.avatar+'\' > <div style="float: left;"> <span class="show_name" style="font-size: 24px; color: buttonshadow; margin: 6px; margin-left: 17px;">'+this.groupname+'</span>'+status+' <div style="display: block; margin-top: 10px; margin-left: 5px;"><button class="layui-btn layui-btn-radius layui-btn-normal" data-type="agree" group_id='+this.id+' avatar='+this.avatar+' onclick="innerGroup(this)"  group_name='+this.groupname+'>加群</button></div> </div> </li>';
                             $('#content').append(li);
                         });
 					}else {
@@ -155,7 +161,7 @@
 		 var groups = parent.layui.layim.cache().friend;
           var uid = $($(_obj).parent().parent().parent()).attr('id');
           //console.log("uid:"+uid);
-		 var me = '${me}';
+		 var me = '${Session.me}';
 		 if(me == uid){
 			layer.msg("不能添加自己为好友哦!");
 			return;
@@ -196,7 +202,7 @@
                   //console.log("group:"+group);
 
                   $.ajax({
-		 			  url:'${base}/user/applyFriend',
+		 			  url:'${base!}/user/applyFriend',
 		 			  type:'get',
 		 			  data:{'uid':uid,'from_group':group,"remark":remark},
 		 			  success:function(data){
@@ -273,7 +279,7 @@
         $('#uimg').attr('src', avatar);
         $('#uname').text(group_name);
         //console.log($('#ugroup'));
-        var me = '${me}';
+        var me = '${Session.me}';
 //        $(groups).each(function (index, item) {
 //            if (index == 0) {
 //                fromgroup = item.id;
@@ -296,7 +302,7 @@
                 //console.log("groupId:"+group_id);
                 //console.log("remark:"+remark);
 
-                $.get('${base}/user/innerGroup',{'userId': me, 'groupId': group_id, "remark": remark},function (data) {
+                $.get('${base!}/user/innerGroup',{'userId': me, 'groupId': group_id, "remark": remark},function (data) {
                     //console.log(data);
                     if (data.code == 1) {
 						layer.msg('加群申请已发送!', {

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8" />
+		<meta charset="utf-8"/>
 		<title>登录</title>
-		<script src="${base}/js/jquery-1.11.1.js"></script>
+		<script src="js/jquery-1.11.1.js"></script>
 		<script>
 			$(document).ready(function() {
 				$(".form").slideDown(500);
@@ -201,7 +201,7 @@
 		var name = $('#uname').val();
 		var pwd = $('#upwd').val();
 		$.ajax({
-			url:'${base}/user/login',
+			url:'${base!}/user/login',
 			data:{username:name,pwd:pwd},
 			dataType:'json',
 			type:'post',
@@ -209,7 +209,7 @@
 				console.log(data);
 				if(data.code ==1){
 					alert('登陆成功!');
-					location.href='${base}/chat.html';
+					location.href='${base!}/chat';
 //                    setCookie("JSESSIONID",data.sid);
 				}else{
 					alert(data.msg);
@@ -243,7 +243,7 @@
 		} 
 		
 		$.ajax({
-			url:'${base}/user/registry',
+			url:'${base!}/user/registry',
 			data:{username:name,pwd:pwd,sign:sign},
 			dataType:'json',
 			type:'post',
@@ -251,7 +251,7 @@
 				console.log(data);
 				if(data.ok==true){
 					alert('注册成功!');
-					location.href='${base}/chat.html';
+					location.href='${base!}/chat.html';
 				}else{
 					alert(data.msg);
 				}
