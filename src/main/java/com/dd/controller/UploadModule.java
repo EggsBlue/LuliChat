@@ -55,7 +55,6 @@ public class UploadModule {
 		System.out.println(file.getSubmittedFileName());
 		String relpath = getDir()+"/upload/imgs/"+file.getSubmittedFileName(); // 此为: D:\\apache-tomcat-8.0.36\\webapps\\upload\\tomat.png
 		Files.copy(file.getFile(),new File(relpath));
-
 		String url ="/upload/imgs/"+file.getSubmittedFileName();	//eclipse默认的tomcat目录是在其缓存文件中,你要自己指定到tomcat所在目录
 		//构建json数据
 		Map<String,Object> data = new HashMap<String,Object>();
