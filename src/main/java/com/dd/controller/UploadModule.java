@@ -64,7 +64,6 @@ public class UploadModule {
 		Map<String,String> sourceUrl = new HashMap<String,String>();
 		sourceUrl.put("src", url);
 		data.put("data", sourceUrl);
-		
 		return data;
 	}
 
