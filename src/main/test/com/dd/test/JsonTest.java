@@ -1,6 +1,5 @@
 package com.dd.test;
 
-import com.dd.entity.Flock;
 import com.dd.entity.msg.SendMessage;
 import org.junit.Test;
 import org.nutz.json.Json;

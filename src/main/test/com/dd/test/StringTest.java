@@ -1,13 +1,10 @@
 package com.dd.test;
 
-import com.xiaoleilu.hutool.io.resource.ClassPathResource;
-import com.xiaoleilu.hutool.io.resource.Resource;
+import cn.hutool.core.io.resource.ClassPathResource;
+import cn.hutool.core.io.resource.Resource;
 import org.junit.Test;
-import org.nutz.lang.Streams;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class StringTest {
     @Test
