@@ -113,5 +113,31 @@ public class UploadModule {
 		log.debug("uploadDir:"+parent);
 		return parent;
 	}
+
+
+    /**
+     * 发送图片,上传图片接口
+     * @param file
+     * @param context
+     * @return
+     */
+    @At
+    @POST
+    @Filters({@By(type=CrossOriginFilter.class)})
+    @AdaptBy(type = UploadAdaptor.class, args = { "${app.root}/WEB-INF/tmp" })
+    public Object image2(@Param("file") TempFile file,ServletContext context){
+
+
+
+        String url = "";
+        //构建json数据
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("code", "0");
+        data.put("msg", "");
+        Map<String,String> sourceUrl = new HashMap<String,String>();
+        sourceUrl.put("src", url);
+        data.put("data", sourceUrl);
+        return data;
+    }
 	
 }

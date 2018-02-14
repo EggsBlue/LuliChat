@@ -45,22 +45,6 @@ public class Accepter implements IWsMsgHandler {
 	@Inject(value="userDao")
 	private UserDao userDao;
 
-	@Inject
-	private ReqMessageHandler reqMessageHandler;
-	@Inject
-	private DelFriendMessageHandler delFriendMessageHandler;
-	@Inject
-	private JoinGroupMessageHandler joinGroupMessageHandler;
-	@Inject
-	private OutGroupMessageHandler outGroupMessageHandler;
-	@Inject
-	private P2PMessageHandler p2PMessageHandler;
-	@Inject
-	private GroupMessageHandler groupMessageHandler;
-	@Inject
-	private LoginMessageHandler loginMessageHandler;
-	@Inject
-	private OldMessageHandler oldMessageHandler;
 	private NutMap handlers = new NutMap();
 	/**
 	 * @param args

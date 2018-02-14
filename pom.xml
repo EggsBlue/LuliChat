@@ -13,6 +13,7 @@
   <properties>
     <nutzboot.version>2.2-SNAPSHOT</nutzboot.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <slf4j.version>1.7.25</slf4j.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -29,19 +30,32 @@
   <dependencies>
     <dependency>
       <groupId>org.nutz</groupId>
-      <artifactId>nutzboot-starter-jetty</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.nutz</groupId>
       <artifactId>nutzboot-starter-nutz-mvc</artifactId>
     </dependency>
     <dependency>
       <groupId>org.nutz</groupId>
-      <artifactId>nutzboot-starter-shiro</artifactId>
+      <artifactId>nutzboot-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.nutz</groupId>
+      <artifactId>nutzboot-starter-nutz-dao</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.nutz</groupId>
+      <artifactId>nutzboot-starter-jetty</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
     </dependency>
     <dependency>
       <groupId>org.nutz</groupId>
       <artifactId>nutzboot-starter-freemarker</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.nutz</groupId>
+      <artifactId>nutzboot-starter-shiro</artifactId>
     </dependency>
     <!-- mysql驱动 -->
     <dependency>
@@ -50,82 +64,20 @@
       <version>5.1.44</version>
     </dependency>
     <dependency>
-      <groupId>com.alibaba</groupId>
-      <artifactId>druid</artifactId>
-    </dependency>
-    <!--<dependency> -->
-    <!--<groupId>org.freemarker</groupId> -->
-    <!--<artifactId>freemarker</artifactId> -->
-    <!--<version>2.3.26-incubating</version> -->
-    <!--</dependency> -->
-
-    <dependency>
       <groupId>org.t-io</groupId>
       <artifactId>tio-websocket-server</artifactId>
       <version>0.0.8-tio-websocket</version>
     </dependency>
     <dependency>
-      <groupId>org.t-io</groupId>
-      <artifactId>tio-core</artifactId>
+      <groupId>com.aliyun.oss</groupId>
+      <artifactId>aliyun-sdk-oss</artifactId>
+      <version>2.8.2</version>
     </dependency>
-    <dependency>
-      <groupId>net.sf.ehcache</groupId>
-      <artifactId>ehcache</artifactId>
-    </dependency>
-
-    <!--<dependency> -->
-    <!--<groupId>org.nutz</groupId> -->
-    <!--<artifactId>nutz-plugins-daocache</artifactId> -->
-    <!--<version>1.r.57</version> -->
-    <!--</dependency> -->
-
-    <!--<dependency> -->
-    <!--<groupId>org.nutz</groupId> -->
-    <!--<artifactId>nutz-plugins-views</artifactId> -->
-    <!--<version>1.r.63.r5</version> -->
-    <!--</dependency> -->
-    <!--<dependency> -->
-    <!--<groupId>org.nutz</groupId> -->
-    <!--<artifactId>nutz-integration-shiro</artifactId> -->
-    <!--<version>1.r.60</version> -->
-    <!--</dependency> -->
-    <!--<dependency> -->
-    <!--<groupId>org.apache.shiro</groupId> -->
-    <!--<artifactId>shiro-all</artifactId> -->
-    <!--<version>1.4.0</version> -->
-    <!--<exclusions> -->
-    <!--<exclusion> -->
-    <!--<artifactId>ehcache-core</artifactId> -->
-    <!--<groupId>net.sf.ehcache</groupId> -->
-    <!--</exclusion> -->
-    <!--</exclusions> -->
-    <!--</dependency> -->
-    <!--<dependency> -->
-    <!--<groupId>org.apache.shiro</groupId> -->
-    <!--<artifactId>shiro-core</artifactId> -->
-    <!--<version>1.4.0</version> -->
-    <!--</dependency> -->
-    <!--<dependency> -->
-    <!--<groupId>org.apache.shiro</groupId> -->
-    <!--<artifactId>shiro-web</artifactId> -->
-    <!--<version>1.4.0</version> -->
-    <!--</dependency> -->
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <version>4.12</version>
       <scope>test</scope>
-    </dependency>
-
-    <!--<dependency> -->
-    <!--<groupId>org.springframework</groupId> -->
-    <!--<artifactId>spring-aop</artifactId> -->
-    <!--<version>4.3.12.RELEASE</version> -->
-    <!--</dependency> -->
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
     </dependency>
   </dependencies>
   <build>
@@ -170,7 +122,7 @@
     </plugins>
   </build>
 
-  <profiles>
+<profiles>
     <profile>
       <id>jdk-1.8</id>
       <!-- 另外一种激活方式 -->
@@ -184,9 +136,9 @@
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
       </properties>
     </profile>
-  </profiles>
+</profiles>
 
-  <repositories>
+<repositories>
     <repository>
       <id>nutz</id>
       <url>http://jfrog.nutz.cn/artifactory/libs-release</url>
@@ -205,5 +157,5 @@
         <enabled>false</enabled>
       </releases>
     </repository>
-  </repositories>
+</repositories>
 </project>

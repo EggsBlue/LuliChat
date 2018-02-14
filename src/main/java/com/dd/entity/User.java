@@ -4,6 +4,8 @@ import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
+import java.sql.Timestamp;
+
 /**
  * Describe:用户表
  * Author:蛋蛋
@@ -30,7 +32,8 @@ public class User {
 	private String avatar;
 	@Column
 	private String status;
-	
+	@Column
+	private Timestamp create_time;
 	
 	public int getId() {
 		return id;
@@ -68,6 +71,15 @@ public class User {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public Timestamp getCreate_time() {
+		return create_time;
+	}
+
+	public void setCreate_time(Timestamp create_time) {
+		this.create_time = create_time;
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", pwd=" + pwd + ", sign=" + sign + ", avatar=" + avatar
