@@ -119,6 +119,16 @@
           </execution>
         </executions>
       </plugin>
+
+			<plugin>
+				<groupId>org.nutz.boot</groupId>
+				<artifactId>nutzboot-maven-plugin</artifactId>
+				<version>${nutzboot.version}</version>
+				<configuration>
+					<repoUser>TopCoderMyDream</repoUser>
+					<repoUrl>http://appstore.nutz.io/repo</repoUrl>
+				</configuration>
+			</plugin>
     </plugins>
   </build>
 
