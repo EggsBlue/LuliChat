@@ -4,6 +4,7 @@
 - 该项目为 [MyChat](https://github.com/TopCoderMyDream/MyChat "MyChat") 的迭代版本
 - 这里是最新代码!
   
+  [![PowerByNutz](https://img.shields.io/badge/PowerBy-Nutz-green.svg?style=plastic)](https://github.com/nutzam/nutz)
   [![Build Status](https://api.travis-ci.org/TopCoderMyDream/LuliChat.png?branch=master)](https://travis-ci.org/TopCoderMyDream/LuliChat)
   [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
   
