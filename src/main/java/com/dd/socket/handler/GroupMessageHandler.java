@@ -15,7 +15,7 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
-import org.tio.core.Aio;
+import org.tio.core.Tio;
 import org.tio.core.ChannelContext;
 import org.tio.core.ChannelContextFilter;
 import org.tio.core.maintain.Users;
@@ -70,7 +70,7 @@ public class GroupMessageHandler implements MsgHandlerInterface {
 
         //发送消息,记得转成json
         try {
-            Aio.sendToGroup(SocketServer.groupContext, to.get("id"), SocketMsgUtils.madeWsResponse(Type.GROUP_MSG_REQ, strJson), new ChannelContextFilter() {
+            Tio.sendToGroup(SocketServer.groupContext, to.get("id"), SocketMsgUtils.madeWsResponse(Type.GROUP_MSG_REQ, strJson), new ChannelContextFilter() {
                 @Override
                 public boolean filter(ChannelContext channelContext) {
                     if(channelContext == context){

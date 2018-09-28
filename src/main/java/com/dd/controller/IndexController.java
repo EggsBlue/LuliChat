@@ -10,6 +10,7 @@ import org.nutz.mvc.annotation.Ok;
 @At("/")
 public class IndexController {
 
+
     @At
     @Ok("fm:/login")
     public Object login(){

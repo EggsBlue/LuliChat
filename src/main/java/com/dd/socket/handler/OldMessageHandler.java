@@ -12,7 +12,7 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
 import org.nutz.lang.util.NutMap;
-import org.tio.core.Aio;
+import org.tio.core.Tio;
 import org.tio.core.ChannelContext;
 import org.tio.utils.lock.SetWithLock;
 
@@ -62,7 +62,7 @@ public class OldMessageHandler implements MsgHandlerInterface {
                             String strJson = Json.toJson(sendMessage);
                             System.out.println("好友消息:" + strJson);
 
-                            Aio.send(context, SocketMsgUtils.madeWsResponse(Type.OLD_MESSAGE_REQ_MSG,strJson));
+                            Tio.send(context, SocketMsgUtils.madeWsResponse(Type.OLD_MESSAGE_REQ_MSG,strJson));
 //                    		session.getAsyncRemote().sendText(strJson);
 //                        try {
 //                            session.getBasicRemote().sendText(strJson);
@@ -92,7 +92,7 @@ public class OldMessageHandler implements MsgHandlerInterface {
                             String strJson = Json.toJson(sendMessage);
 //                    		String strJson = sendMessage.toJson();
                             System.out.println(strJson);
-                            Aio.send(context, SocketMsgUtils.madeWsResponse(Type.OLD_MESSAGE_REQ_MSG,strJson));
+                            Tio.send(context, SocketMsgUtils.madeWsResponse(Type.OLD_MESSAGE_REQ_MSG,strJson));
                             sendOnlineCount(context);
 //                    		session.getAsyncRemote().sendText(strJson);
 //                        try {
@@ -113,8 +113,8 @@ public class OldMessageHandler implements MsgHandlerInterface {
             }
         } catch (Exception e) {
             e.printStackTrace();
-//            Aio.send(context, WsResponse.fromText(Json.toJson(new SocketMsg(Type.FAIL_MESSAGE_RESP,"查询未读消息失败,"+e.getMessage())),"utf-8"));
-            Aio.send(context, SocketMsgUtils.madeWsResponse(Type.FAIL_MESSAGE_RESP,"查询未读消息失败,"+e.getMessage()));
+//            Tio.send(context, WsResponse.fromText(Json.toJson(new SocketMsg(Type.FAIL_MESSAGE_RESP,"查询未读消息失败,"+e.getMessage())),"utf-8"));
+            Tio.send(context, SocketMsgUtils.madeWsResponse(Type.FAIL_MESSAGE_RESP,"查询未读消息失败,"+e.getMessage()));
         }
 
         return null;
@@ -125,8 +125,8 @@ public class OldMessageHandler implements MsgHandlerInterface {
      * @param context
      */
     public void sendOnlineCount(ChannelContext context){
-        SetWithLock<ChannelContext> allConnectedsChannelContexts = Aio.getAllConnectedsChannelContexts(context.getGroupContext());
-        Aio.send(context, SocketMsgUtils.madeWsResponse(Type.ONLINECOUNT,Json.toJson(new NutMap().setv("count",allConnectedsChannelContexts.getObj().size()))));
+        SetWithLock<ChannelContext> allConnectedsChannelContexts = context.getGroupContext().connections;
+        Tio.send(context, SocketMsgUtils.madeWsResponse(Type.ONLINECOUNT,Json.toJson(new NutMap().setv("count",allConnectedsChannelContexts.getObj().size()))));
     }
 
 }

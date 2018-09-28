@@ -12,7 +12,7 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
 import org.nutz.lang.util.NutMap;
-import org.tio.core.Aio;
+import org.tio.core.Tio;
 import org.tio.core.ChannelContext;
 import org.tio.utils.lock.SetWithLock;
 
@@ -43,7 +43,7 @@ public class P2PMessageHandler implements MsgHandlerInterface {
         String type = msg.getString("action");
 
         //t-io支持多点登录,获取的是一个集合,因为此账号可能存在多个连接哦
-        SetWithLock<ChannelContext> contexts = Aio.getChannelContextsByUserid(context.getGroupContext(), id);
+        SetWithLock<ChannelContext> contexts = Tio.getChannelContextsByUserid(context.getGroupContext(), id);
 
         System.out.println("send friend message...");
 //        WsHandler handler = nutSocket.getHandler(toName);
@@ -72,7 +72,7 @@ public class P2PMessageHandler implements MsgHandlerInterface {
 //                nutSocket.sendJson(toName, sendMessage);
 
                 for (ChannelContext con : contexts.getObj()){
-                    Aio.send(con, SocketMsgUtils.madeWsResponse(Type.P2P_REQ,strJson));
+                    Tio.send(con, SocketMsgUtils.madeWsResponse(Type.P2P_REQ,strJson));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

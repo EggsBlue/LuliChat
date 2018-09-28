@@ -4,7 +4,7 @@ import org.nutz.ioc.Ioc;
 import org.nutz.ioc.impl.PropertiesProxy;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.Mvcs;
-import org.tio.core.Aio;
+import org.tio.core.Tio;
 import org.tio.server.ServerGroupContext;
 import org.tio.websocket.server.WsServerStarter;
 import org.tio.websocket.server.handler.IWsMsgHandler;

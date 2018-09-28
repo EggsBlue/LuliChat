@@ -11,7 +11,7 @@ import org.nutz.json.Json;
 import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
-import org.tio.core.Aio;
+import org.tio.core.Tio;
 import org.tio.core.ChannelContext;
 import org.tio.websocket.common.WsResponse;
 
@@ -38,17 +38,17 @@ public class LoginMessageHandler implements MsgHandlerInterface {
         }
         User fetch = userDao.getByNamPwd(user);
         if(fetch == null){
-            Aio.send(context,WsResponse.fromText(Json.toJson(Response.fail()),"utf-8"));
+            Tio.send(context,WsResponse.fromText(Json.toJson(Response.fail()),"utf-8"));
         }
         //初始化用户
-        Aio.bindUser(context,String.valueOf(user.getId()));
+        Tio.bindUser(context,String.valueOf(user.getId()));
         //初始化该用户群组
         List<Flock> flocks = userDao.getFlocks(user.getId());
         for(Flock fl: flocks){
-            Aio.bindGroup(context,fl.getId().toString());
+            Tio.bindGroup(context,fl.getId().toString());
         }
 
-        Aio.send(context,WsResponse.fromText(Json.toJson(Response.ok()),"utf-8"));
+        Tio.send(context,WsResponse.fromText(Json.toJson(Response.ok()),"utf-8"));
         //更新状态
 //        userDao.online(user.getId());
         return null;

@@ -19,9 +19,10 @@ import org.nutz.mapl.Mapl;
 import org.nutz.mvc.Mvcs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tio.core.Aio;
+import org.tio.core.Tio;
 import org.tio.core.ChannelContext;
 import org.tio.core.ChannelContextFilter;
+import org.tio.core.Tio;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 import org.tio.utils.lock.SetWithLock;
@@ -105,7 +106,7 @@ public class Accepter implements IWsMsgHandler {
 
 		//绑定用户
 		channelContext.setAttribute("userName",user.getUsername());
-		Aio.bindUser(channelContext,id);
+		Tio.bindUser(channelContext,id);
 		//绑定群组
 		bindGroup(Integer.valueOf(id),channelContext);
 
@@ -114,6 +115,11 @@ public class Accepter implements IWsMsgHandler {
 		//上线通知
 		onLineMsg(user.getUsername(),channelContext);
 		return httpResponse;
+	}
+
+	@Override
+	public void onAfterHandshaked(HttpRequest httpRequest, HttpResponse httpResponse, ChannelContext channelContext) throws Exception {
+
 	}
 
 	/**
@@ -125,7 +131,7 @@ public class Accepter implements IWsMsgHandler {
 		List<Flock> list = userDao.getFlocks(id);
 		if(list!=null && list.size()>0){
 			for(Flock f : list){
-				Aio.bindGroup(context,f.getId().toString());
+				Tio.bindGroup(context,f.getId().toString());
 			}
 		}
 	}
@@ -136,8 +142,8 @@ public class Accepter implements IWsMsgHandler {
 	public void onLineMsg(String name,ChannelContext context){
 		//直接调用 sendToAll方法会导致错误,不知何种原因
 //		Aio.sendToAll(context.getGroupContext(), SocketMsgUtils.madeWsResponse(Type.SUCCESS_MESSAGE_RESP,Json.toJson(NutMap.NEW().setv("msg",name+"上线了!"))));
-		SetWithLock<ChannelContext> allConnectedsChannelContexts = Aio.getAllConnectedsChannelContexts(context.getGroupContext());
-		Aio.sendToSet(context.getGroupContext(), allConnectedsChannelContexts, SocketMsgUtils.madeWsResponse(Type.SUCCESS_MESSAGE_RESP, Json.toJson(NutMap.NEW().setv("msg", name + "上线了!").setv("count",allConnectedsChannelContexts.getObj().size()))), new ChannelContextFilter() {
+		SetWithLock<ChannelContext> allConnectedsChannelContexts =context.getGroupContext().connections;
+		Tio.sendToSet(context.getGroupContext(), allConnectedsChannelContexts, SocketMsgUtils.madeWsResponse(Type.SUCCESS_MESSAGE_RESP, Json.toJson(NutMap.NEW().setv("msg", name + "上线了!").setv("count",allConnectedsChannelContexts.getObj().size()))), new ChannelContextFilter() {
 			@Override
 			public boolean filter(ChannelContext channelContext) {
 				if(context == channelContext){
@@ -154,8 +160,8 @@ public class Accepter implements IWsMsgHandler {
 	}
 
 	public void offLineMsg(String name,ChannelContext context){
-		SetWithLock<ChannelContext> allConnectedsChannelContexts = Aio.getAllConnectedsChannelContexts(context.getGroupContext());
-		Aio.sendToSet(context.getGroupContext(), allConnectedsChannelContexts, SocketMsgUtils.madeWsResponse(Type.FAIL_MESSAGE_RESP, Json.toJson(NutMap.NEW().setv("msg", name + "下线了!").setv("count",allConnectedsChannelContexts.getObj().size()))), new ChannelContextFilter() {
+		SetWithLock<ChannelContext> allConnectedsChannelContexts = context.getGroupContext().connections;
+		Tio.sendToSet(context.getGroupContext(), allConnectedsChannelContexts, SocketMsgUtils.madeWsResponse(Type.FAIL_MESSAGE_RESP, Json.toJson(NutMap.NEW().setv("msg", name + "下线了!").setv("count",allConnectedsChannelContexts.getObj().size()))), new ChannelContextFilter() {
 			@Override
 			public boolean filter(ChannelContext channelContext) {
 				if(context == channelContext){
@@ -188,9 +194,9 @@ public class Accepter implements IWsMsgHandler {
 
 	@Override
 	public Object onClose(WsRequest wsRequest, byte[] bytes, ChannelContext channelContext) throws Exception {
-		Aio.remove(channelContext, "receive close flag");
+		Tio.remove(channelContext, "receive close flag");
 		//下线
-		String userid = channelContext.getUserid();
+		String userid = channelContext.userid;
 		if(!Strings.isBlank(userid)){
 			userDao.hide(Integer.valueOf(userid));
 		}

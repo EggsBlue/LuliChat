@@ -1,7 +1,7 @@
 package com.dd.utils;
 
 import com.dd.socket.SocketServer;
-import org.tio.core.Aio;
+import org.tio.core.Tio;
 import org.tio.core.intf.Packet;
 
 /**
@@ -13,7 +13,7 @@ public class SocketUtils {
 
 
     public static void sendByUserId(String userId, Packet packet){
-        Aio.sendToUser(SocketServer.groupContext,userId,packet);
+        Tio.sendToUser(SocketServer.groupContext,userId,packet);
     }
 
 }
