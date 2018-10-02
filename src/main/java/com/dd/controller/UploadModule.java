@@ -13,6 +13,8 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.nutz.dao.Cnd;
+import org.nutz.ioc.impl.PropertiesProxy;
+import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Files;
 import org.nutz.lang.util.NutMap;
@@ -39,6 +41,10 @@ import org.nutz.mvc.upload.UploadAdaptor;
 @At("/upload")
 @Ok("json")
 public class UploadModule {
+	Log log = Logs.get();
+
+	@Inject
+	private PropertiesProxy conf;
 
 	/**
 	 * 发送图片,上传图片接口
@@ -53,9 +59,10 @@ public class UploadModule {
 	public Object image(@Param("file") TempFile file,ServletContext context){
 		System.out.println(file.getName());
 		System.out.println(file.getSubmittedFileName());
-		String relpath = getDir()+"/upload/imgs/"+file.getSubmittedFileName(); // 此为: D:\\apache-tomcat-8.0.36\\webapps\\upload\\tomat.png
+		String relpath = conf.get("jetty.staticPathLocal")+"images/"+file.getSubmittedFileName(); // 此为: D:\\apache-tomcat-8.0.36\\webapps\\upload\\tomat.png
+		log.debug("relpath:"+relpath);
 		Files.copy(file.getFile(),new File(relpath));
-		String url ="/upload/imgs/"+file.getSubmittedFileName();	//eclipse默认的tomcat目录是在其缓存文件中,你要自己指定到tomcat所在目录
+		String url ="/images/"+file.getSubmittedFileName();	//eclipse默认的tomcat目录是在其缓存文件中,你要自己指定到tomcat所在目录
 		//构建json数据
 		Map<String,Object> data = new HashMap<String,Object>();
 		data.put("code", "0");
@@ -79,10 +86,10 @@ public class UploadModule {
 	public Object files(@Param("file") TempFile file,ServletContext context){
 		System.out.println(file.getName());
 		System.out.println(file.getSubmittedFileName());
-		String relpath = getDir()+"/upload/files/"+file.getSubmittedFileName(); // 此为: D:\\apache-tomcat-8.0.36\\webapps\\upload\\tomat.png
+		String relpath = conf.get("jetty.staticPathLocal")+"files/"+file.getSubmittedFileName(); // 此为: D:\\apache-tomcat-8.0.36\\webapps\\upload\\tomat.png
 		Files.copy(file.getFile(),new File(relpath));
-		String url ="/upload/files/"+file.getSubmittedFileName();	//eclipse默认的tomcat目录是在其缓存文件中,你要自己指定到tomcat所在目录
-		//构建json数据
+		String url ="/files/"+file.getSubmittedFileName();	//eclipse默认的tomcat目录是在其缓存文件中,你要自己指定到tomcat所在目录
+		// 构建json数据
 		Map<String,Object> data = new HashMap<String,Object>();
 		data.put("code", "0");
 		data.put("msg", "");
@@ -105,7 +112,6 @@ public class UploadModule {
 		return nm;
 	}
 
-	Log log = Logs.get();
 
 	public String getDir(){
 		String realPath = Mvcs.getServletContext().getRealPath("/");
