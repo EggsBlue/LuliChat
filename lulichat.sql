@@ -106,7 +106,7 @@ CREATE TABLE `user` (
   `sign` varchar(200) DEFAULT NULL COMMENT '签名',
   `avatar` varchar(200) DEFAULT NULL COMMENT '头像',
   `status` varchar(20) DEFAULT NULL COMMENT '在线状态',
-  `create_time datatime DEFAULT NULL COMMENT '创建时间'
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
